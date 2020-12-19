@@ -1,5 +1,5 @@
-/vendor
-/node_modules
+vendor/
+node_modules/
 npm-debug.log
 yarn-error.log
 bootstrap/compiled.php
@@ -8,7 +8,6 @@ public/storage
 public/hot
 public_html/storage
 public_html/hot
-
 storage/*.key
 .env
 Homestead.yaml
