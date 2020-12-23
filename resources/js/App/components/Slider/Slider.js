@@ -6,9 +6,8 @@ class Slider extends Component {
         this.state={selected:0}
     }
   render() {
-    console.log(this.state)
     return (
-        <div style={{position:'relative',top:'60px'}}>
+        <div style={{position:'relative',paddingTop:"60px"}}>
             <div className='slider'>
                 {this.props.children}
             </div>
@@ -27,9 +26,6 @@ class Slider extends Component {
   }
 }
 class SItem extends Component {
-    constructor(props){
-        super(props)
-    }
     getId(){
         return this.props.id
     }
