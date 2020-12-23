@@ -21,7 +21,7 @@ class CreateClientsTable extends Migration
             $table->string('ville');
             $table->string('adresse');
             $table->unsignedBigInteger('id_user'); //reférence utilisateurs.id
-            $table->foreign('id_user')->references('id')->on('utilisateurs');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->timestamps();
         });
     }
