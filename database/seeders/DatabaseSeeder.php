@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        //Creatin each type of seeder
         (new type_utilisateurSeeder)->run();
     }
 }
