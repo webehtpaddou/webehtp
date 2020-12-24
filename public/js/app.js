@@ -6445,7 +6445,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600&display=swap);", ""]);
 
 // module
-exports.push([module.i, ".connexion{\r\n    display: flex;\r\n    justify-content: center;\r\n    font-family: 'Raleway', sans-serif;\r\n}\r\n.connexion form{\r\n    width: 514px;\r\n    height: 490px; \r\n    margin-bottom: 50px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    position: relative;\r\n    top: 120px;\r\n    box-shadow: 0 0 9px 1px rgba(0, 0, 0, 0.25);;\r\n}\r\n.connexion h1{\r\n    font-size: 40px;\r\n    margin-top: 20px;\r\n}\r\n.connexion label{\r\n    font-size: 22px;\r\n    margin-top: 20px;\r\n    margin-bottom: 5px;\r\n}\r\n.signin-dialog{\r\n    position: relative;\r\n    margin-top: 20px;\r\n    width: 70%;\r\n}\r\n.signin-dialog input{\r\n    width: 100%;\r\n    height: 50px;\r\n    border: 1px solid #CFCFCF;\r\n    box-sizing: border-box;\r\n    outline: none;\r\n    font-size: 18px;\r\n    padding: 0 10px;\r\n}\r\n.signin-dialog *{\r\n    display: block;\r\n}\r\n.connexion button{\r\n    background: #86D0FA;\r\n    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);\r\n    color: white;\r\n    border: none;\r\n    width: 160px;\r\n    height: 45px;\r\n    font-size: 22px;\r\n    margin-top: 60px;\r\n    outline: none;\r\n    cursor: pointer;\r\n}\r\n.connexion .forget{\r\n    position: absolute;\r\n    color: #96EAEA;\r\n    bottom: 10px;\r\n}", ""]);
+exports.push([module.i, ".connexion{\r\n    display: flex;\r\n    justify-content: center;\r\n    font-family: 'Raleway', sans-serif;\r\n}\r\n.connexion form{\r\n    width: 514px;\r\n    height: 490px; \r\n    margin-bottom: 50px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    position: relative;\r\n    top: 120px;\r\n    box-shadow: 0 0 9px 1px rgba(0, 0, 0, 0.25);;\r\n}\r\n.connexion h1{\r\n    font-size: 40px;\r\n    margin-top: 20px;\r\n}\r\n.connexion label{\r\n    font-size: 22px;\r\n    margin-top: 20px;\r\n    margin-bottom: 5px;\r\n}\r\n.signin-dialog{\r\n    position: relative;\r\n    margin-top: 20px;\r\n    width: 70%;\r\n}\r\n.signin-dialog input{\r\n    width: 100%;\r\n    height: 50px;\r\n    border: 1px solid #CFCFCF;\r\n    box-sizing: border-box;\r\n    outline: none;\r\n    font-size: 18px;\r\n    padding: 0 10px;\r\n}\r\n.signin-dialog *{\r\n    display: block;\r\n}\r\n.connexion button{\r\n    background: #86D0FA;\r\n    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);\r\n    color: white;\r\n    border: none;\r\n    width: 160px;\r\n    height: 45px;\r\n    font-size: 22px;\r\n    margin-top: 60px;\r\n    outline: none;\r\n    cursor: pointer;\r\n}\r\n.connexion .forget{\r\n    position: absolute;\r\n    color: #96EAEA;\r\n    bottom: 10px;\r\n}\r\n.connexion .remember {\r\n    margin-top: 20px;\r\n}\r\n.connexion .remember input{\r\n    height: 20px;\r\n    width: 20px;\r\n    display: inline-block;\r\n    margin-right: 15px;\r\n}\r\n.connexion .remember label{\r\n    display: inline-block;\r\n    margin: 0;\r\n}", ""]);
 
 // exports
 
@@ -71560,6 +71560,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -71568,30 +71570,84 @@ var Connexion = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(Connexion);
 
-  function Connexion() {
+  function Connexion(props) {
+    var _this;
+
     _classCallCheck(this, Connexion);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this), "handleEmailInput", function (e) {
+      _this.setState({
+        email: e.target.value
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handlePasswordInput", function (e) {
+      _this.setState({
+        password: e.target.value
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleCheckInput", function (e) {
+      _this.setState({
+        check: !_this.state.check
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (e) {
+      e.preventDefault();
+      console.log("email: " + _this.state.email + "\npassword :" + _this.state.password + "\nstayed :" + _this.state.check);
+    });
+
+    _this.state = {
+      email: "",
+      password: "",
+      check: false
+    };
+    return _this;
   }
 
   _createClass(Connexion, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var csrf_token = fetch("/token").then(function (msg) {
+        console.log(msg.json());
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        onSubmit: this.handleSubmit,
         className: "connexion"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Connexion"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "signin-dialog"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "email"
       }, "Email"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleEmailInput,
         name: "email",
+        value: this.state.email,
         type: "text"
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "password"
       }, "Mot de passe"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handlePasswordInput,
         name: "password",
+        value: this.state.password,
         type: "password"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "remember"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleCheckInput,
+        type: "checkbox",
+        checked: this.state.check,
+        name: "remember",
+        id: "remember"
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "remember"
+      }, "Rester connect\xE9"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "submit"
       }, "Se connecter"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "/forget",
