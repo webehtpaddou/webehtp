@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::view('/','app');
 
 Auth::routes();
-
+Route::get('csrf/{secret}', function ($secret) {
+    if($secret=='webehtpcsrfprovider'){
+        //return view('tools.csrfProvider');
+        return csrf_token();
+    }
+    else return 'Url Invalide!!!';
+});
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
