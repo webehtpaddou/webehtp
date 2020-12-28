@@ -13,6 +13,7 @@
     justify-content: space-between;
     z-index: 10;
 }
+
 .logo{
     font-family: 'Vast Shadow', cursive;
     margin-left: 20px;
@@ -65,4 +66,40 @@
 .basket img{
     height: 100%;
     padding-top: 4px;
+}
+.user-logged{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    height: 60px;
+}
+.user-logged1{
+    height: 60px;
+}
+.user-logged .name{
+    margin-left: 10px;
+}
+.user-logged img{
+    height:50px;
+}
+
+.user-logged1 .dropdown-menu ul{
+    list-style-type: none;
+}
+.user-logged1 .dropdown-menu li{
+    padding: 5px 0;
+}
+.user-logged1 .dropdown-menu{
+    background-color: white;
+    padding: 10px 0;
+    display: none;
+}
+.user-logged .dropdown {
+    width: 20px;
+    height: 10px;
+    margin-right: 10px;
+}
+.user-logged1:hover .dropdown-menu{
+    display: block;
 }
