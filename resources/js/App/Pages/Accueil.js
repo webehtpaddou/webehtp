@@ -1,19 +1,55 @@
 import React, { Component } from 'react'
+import {Link} from "react-router-dom"
 
 class Accueil extends Component {
   constructor(props){
     super(props)
     this.state={loading:true,
       slider:[
-        {img:"https://github.com/Flat-Pixels/assets_hosting/blob/master/picture_slides/1.jpg?raw=true",link:"/"},
-        {img:"https://github.com/Flat-Pixels/assets_hosting/blob/master/picture_slides/2.jpg?raw=true",link:"/"},
-        {img:"https://github.com/Flat-Pixels/assets_hosting/blob/master/picture_slides/3.jpg?raw=true",link:"/"},
-      ],
-      sliderPropreties:{
-        arrows:false,
-        easing:"ease",
-        transitionDuration:3000
-      }
+        {
+          img:"https://imgupload.io/images/2020/12/29/slider-1.jpg",
+          text:""
+        },
+        {
+          img:"https://imgupload.io/images/2020/12/29/slider-3.jpg",
+          text:""
+        },
+        {
+          img:"https://imgupload.io/images/2020/12/29/slider-2.jpg",
+          text:""
+        }],
+      best_sales:[
+        {
+          id:0,
+          name:"",
+          img:"https://imgupload.io/images/2020/12/29/product-1.jpg",
+          price:100
+        },
+        {
+          id:1,
+          name:"",
+          img:"https://imgupload.io/images/2020/12/29/product-2.jpg",
+          price:100
+        },
+        {
+          id:2,
+          name:"",
+          img:"https://imgupload.io/images/2020/12/29/product-3.jpg",
+          price:100
+        },
+        {
+          id:3,
+          name:"",
+          img:"https://imgupload.io/images/2020/12/29/product-4.jpg",
+          price:100
+        },
+        {
+          id:4,
+          name:"",
+          img:"https://imgupload.io/images/2020/12/29/product-5.jpg",
+          price:100
+        },
+      ]
     }
   }
   async componentDidMount(){
@@ -37,58 +73,36 @@ class Accueil extends Component {
                     
                     <div className="col-md-8">
                         <div className="header-slider normal-slider">
-                            <div className="header-slider-item">
-                                <img src="img/slider-1.jpg" alt="Slider Image" />
+                          {this.state.slider.map((elt,i)=>{
+                              return(
+                                <div key={i} className="header-slider-item">
+                                <img src={elt.img} alt="Slider Image" />
                                 <div className="header-slider-caption">
-                                    <p>Some text goes here that describes the image</p>
+                                    <p>{elt.text}</p>
                                     <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Shop Now</a>
                                 </div>
                             </div>
-                            <div className="header-slider-item">
-                                <img src="img/slider-2.jpg" alt="Slider Image" />
-                                <div className="header-slider-caption">
-                                    <p>Some text goes here that describes the image</p>
-                                    <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div>
-                            </div>
-                            <div className="header-slider-item">
-                                <img src="img/slider-3.jpg" alt="Slider Image" />
-                                <div className="header-slider-caption">
-                                    <p>Some text goes here that describes the image</p>
-                                    <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Shop Now</a>
-                                </div>
-                            </div>
+                              )
+                          })}
+                            
                         </div>
                     </div>
                     <div className="col-md-4">
                         <div className="header-img">
                             <div className="img-item">
-                                <img src="img/category-1.jpg" />
+                                <img src="https://imgupload.io/images/2020/12/29/category-1.jpg" />
                                 <a className="img-text" href="">
-                                    <p>Some text goes here that describes the image</p>
+                                    <p></p>
                                 </a>
                             </div>
                             <div className="img-item">
-                                <img src="img/category-2.jpg" />
+                                <img src="https://imgupload.io/images/2020/12/29/category-2.jpg" />
                                 <a className="img-text" href="">
-                                    <p>Some text goes here that describes the image</p>
+                                    <p></p>
                                 </a>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div className="brand">
-            <div className="container-fluid">
-                <div className="brand-slider">
-                    <div className="brand-item"><img src="img/brand-1.png" alt=""/></div>
-                    <div className="brand-item"><img src="img/brand-2.png" alt=""/></div>
-                    <div className="brand-item"><img src="img/brand-3.png" alt=""/></div>
-                    <div className="brand-item"><img src="img/brand-4.png" alt=""/></div>
-                    <div className="brand-item"><img src="img/brand-5.png" alt=""/></div>
-                    <div className="brand-item"><img src="img/brand-6.png" alt=""/></div>
                 </div>
             </div>
         </div>
@@ -146,10 +160,12 @@ class Accueil extends Component {
                     <h1>best selling</h1>
                 </div>
                 <div className="row align-items-center product-slider product-slider-4">
-                    <div className="col-lg-3">
+                  {this.state.best_sales.map((elt,i)=>{
+                    return(
+                      <div key={i} className="col-lg-3">
                         <div className="product-item">
                             <div className="product-title">
-                                <a href="#">Product Name</a>
+                                <a href="#">{elt.name}</a>
                                 <div className="ratting">
                                     <i className="fa fa-star"></i>
                                     <i className="fa fa-star"></i>
@@ -160,107 +176,19 @@ class Accueil extends Component {
                             </div>
                             <div className="product-image">
                                 <a href="product-detail.html">
-                                    <img src="img/product-1.jpg" alt="Product Image"/>
+                                    <img src={elt.img} alt="Product Image"/>
                                 </a>
                             </div>
                             <div className="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Buy Now</a>
+                                <h3>{elt.price}<span>DH</span></h3>
+                                <Link className="btn" to="/details">Details</Link>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-lg-3">
-                        <div className="product-item">
-                            <div className="product-title">
-                                <a href="#">Product Name</a>
-                                <div className="ratting">
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div className="product-image">
-                                <a href="product-detail.html">
-                                    <img src="img/product-2.jpg" alt="Product Image"/>
-                                </a>
-                            </div>
-                            <div className="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-3">
-                        <div className="product-item">
-                            <div className="product-title">
-                                <a href="#">Product Name</a>
-                                <div className="ratting">
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div className="product-image">
-                                <a href="product-detail.html">
-                                    <img src="img/product-3.jpg" alt="Product Image"/>
-                                </a>
-                            </div>
-                            <div className="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-3">
-                        <div className="product-item">
-                            <div className="product-title">
-                                <a href="#">Product Name</a>
-                                <div className="ratting">
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div className="product-image">
-                                <a href="product-detail.html">
-                                    <img src="img/product-4.jpg" alt="Product Image"/>
-                                </a>
-                            </div>
-                            <div className="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-3">
-                        <div className="product-item">
-                            <div className="product-title">
-                                <a href="#">Product Name</a>
-                                <div className="ratting">
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div className="product-image">
-                                <a href="product-detail.html">
-                                    <img src="img/product-5.jpg" alt="Product Image"/>
-                                </a>
-                            </div>
-                            <div className="product-price">
-                                <h3><span>$</span>99</h3>
-                                <a className="btn" href=""><i className="fa fa-shopping-cart"></i>Buy Now</a>
-                            </div>
-                        </div>
-                    </div>
+                      </div>
+                    )
+                  })
+                    
+                  }
                 </div>
             </div>
         </div>
@@ -273,7 +201,7 @@ class Accueil extends Component {
                     </div>
                     <div className="col-md-6">
                         <div className="form">
-                            <input type="email" value="Your email here"/>
+                            <input readOnly type="email" value="Your email here"/>
                             <button>Submit</button>
                         </div>
                     </div>
@@ -287,7 +215,7 @@ class Accueil extends Component {
                     <div className="col-md-6">
                         <div className="review-slider-item">
                             <div className="review-img">
-                                <img src="img/review-1.jpg" alt="Image"/>
+                                <img src="https://imgupload.io/images/2020/12/29/review-1.jpg" alt="Image"/>
                             </div>
                             <div className="review-text">
                                 <h2>Morgana</h2>
@@ -301,7 +229,7 @@ class Accueil extends Component {
                     <div className="col-md-6">
                         <div className="review-slider-item">
                             <div className="review-img">
-                                <img src="img/review-2.jpg" alt="Image"/>
+                                <img src="https://imgupload.io/images/2020/12/29/review-2.jpg" alt="Image"/>
                             </div>
                             <div className="review-text">
                                 <h2>Ezreal</h2>
@@ -315,7 +243,7 @@ class Accueil extends Component {
                     <div className="col-md-6">
                         <div className="review-slider-item">
                             <div className="review-img">
-                                <img src="img/review-3.jpg" alt="Image"/>
+                                <img src="https://imgupload.io/images/2020/12/29/review-3.jpg" alt="Image"/>
                             </div>
                             <div className="review-text">
                                 <h2>Fiora</h2>

@@ -14,12 +14,13 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::view("/","app");
-Route::view("/connexion","app");
-Route::view("/inscription","app");
+Route::view("/authentification","app");
+Route::view("/produits","app");
+Route::view("/details","app");
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/products', [App\Http\Controllers\products\productsController::class, 'index'])->name('produits');
 Route::get('csrf/{secret}', function ($secret) {
     if($secret=='webehtpcsrfprovider'){
         //return view('tools.csrfProvider');

@@ -40,7 +40,7 @@ class Inscription extends Component {
           body: formData1,
           method: "post"
         }).then(body=>{this.setState({status:body.status});return body.json()}).then(message=>{
-          if(this.state.status===204) location.href="/profile"
+          if(this.state.status>=200 && this.state.status<=299) location.href="/profile"
           else if(this.state.status==422){
               let msg={name:[],email:[],password:[],password_confirmatiom:[],other:""};
               for(let ch in message.errors){
@@ -59,13 +59,11 @@ class Inscription extends Component {
                     <div className = 'signup-dialog' >
                         <label htmlFor = 'name' > Nom </label> 
                         <input onChange={this.handleNameInput} id="name" name ='name'type = 'text' />
-                        <ul className="errors">
-                            {this.state.message.name.map((error,i)=>{
-                                return(
-                                    <li key={i}>{error}</li>
-                                )
-                            })}
-                        </ul>
+                        {this.state.r_message.name.map((error,i)=>{
+                            return(
+                              <p className="text-danger" key={i}>{error}</p>
+                            )
+                        })}
                         <label htmlFor = 'email' > Email </label> 
                         <input onChange={this.handleEmailInput} id="email" name = 'email' type = 'text' />
                         <ul className="errors">
