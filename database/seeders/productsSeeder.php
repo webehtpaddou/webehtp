@@ -31,7 +31,7 @@ class productsSeeder extends Seeder
                         'marque'=>'Zaara',
                         'description'=>'chemise en coton de très haute qualité',
                         'prix_unitaire'=>'200',
-                        'img'=>'/images/products/article'.($i+1)
+                        'img'=>"https://imgupload.io/images/2020/12/29/product-".($i+1).".jpg"
                     ]
                     );
         }
