@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::view("/","app");
 Route::view("/connexion","app");
-
+Route::view("/inscription","app");
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -33,4 +33,3 @@ Route::get('/products', [App\Http\Controllers\products\productsController::class
 Route::get('users/is_authenticated', [App\Http\Controllers\user\userController::class,'is_authenticated']);
 //retourne l'identité du client sous format json
 Route::get('users/identity', [App\Http\Controllers\user\userController::class,'user']);
-Route::get('/login', [App\Http\Controllers\user\userController::class,'user']);
