@@ -17,7 +17,7 @@ class panierController extends Controller
     */
     public function add_item(Request $request,$id_item,$taille,$color,$pu,$quantite){
         if(Auth::check()){
-            return DB::table('panier')->insert(
+            if(DB::table('panier')->insert(
                 [
                     'article'=>$id_item,
                     'couleur'=>$color,
@@ -27,7 +27,9 @@ class panierController extends Controller
                     'user'=>$request->user()->id
                 ]
 
-            );
+            )){
+                return true;
+            }
         }
         else return "non_authenticated";
     }
