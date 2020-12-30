@@ -27,9 +27,9 @@ class Panier extends Component {
     }
     componentDidMount(){
         fetch('/users/is_authenticated')
-        .then(body=>body.json())
+        .then(body=>body.text())
         .then(rep=>{
-            if(rep===0) location.href="/authentification"
+            if(!rep) location.href="/authentification"
         })
     }
     qteChangem=(e)=>{

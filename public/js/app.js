@@ -72047,7 +72047,7 @@ var Authentification = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Mot de passe"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: this.handlePasswordInput1,
         className: "form-control",
-        type: "text",
+        type: "password",
         placeholder: "Mot de passe"
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-12"
@@ -72111,6 +72111,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 var DetailsProduit = /*#__PURE__*/function (_Component) {
@@ -72124,6 +72126,12 @@ var DetailsProduit = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, DetailsProduit);
 
     _this = _super.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this), "addPanier", function () {
+      var temp = _this.state.product;
+      fetch('panier/add_item/' + temp.id + '/s/noir/' + temp.prix_unitaire + '/1');
+    });
+
     _this.state = {
       product: ""
     };
@@ -72136,13 +72144,6 @@ var DetailsProduit = /*#__PURE__*/function (_Component) {
       this.setState({
         product: this.props.trans()
       });
-    }
-  }, {
-    key: "addPanier",
-    value: function addPanier() {
-      var temp = this.state.product;
-      fetch('panier/add_item/' + temp.id + '/{$taille}/{$quantite}');
-      this.props.trans1(this.state.product);
     }
   }, {
     key: "render",
@@ -72406,9 +72407,9 @@ var Panier = /*#__PURE__*/function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       fetch('/users/is_authenticated').then(function (body) {
-        return body.json();
+        return body.text();
       }).then(function (rep) {
-        if (rep === 0) location.href = "/authentification";
+        if (!rep) location.href = "/authentification";
       });
     }
   }, {
@@ -72570,6 +72571,8 @@ var Produits = /*#__PURE__*/function (_Component) {
       fetch("/products").then(function (body) {
         return body.json();
       }).then(function (obj) {
+        console.log(obj);
+
         _this2.setState({
           products: obj
         });
@@ -72578,6 +72581,8 @@ var Produits = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "product-view"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -72607,6 +72612,7 @@ var Produits = /*#__PURE__*/function (_Component) {
           className: "product-price"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, elt.prix_unitaire, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "DH")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
           "data-index": i,
+          onClick: _this3.handleTrans,
           to: "/details",
           className: "btn",
           href: ""

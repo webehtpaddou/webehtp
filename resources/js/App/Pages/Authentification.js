@@ -150,7 +150,7 @@ class Authentification extends Component {
                             </div>
                             <div className="col-md-6">
                                 <label>Mot de passe</label>
-                                <input onChange={this.handlePasswordInput1} className="form-control" type="text" placeholder="Mot de passe"/>
+                                <input onChange={this.handlePasswordInput1} className="form-control" type="password" placeholder="Mot de passe"/>
                             </div>
                             <div className="col-md-12">
                                 <div className="custom-control custom-checkbox">

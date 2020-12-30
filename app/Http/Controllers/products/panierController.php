@@ -15,13 +15,14 @@ class panierController extends Controller
      *$color =>couleur*
      *$quantite=>quantite (1par defaut)
     */
-    public function add_item(Request $request,$id_item,$taille,$color,$quantite){
+    public function add_item(Request $request,$id_item,$taille,$color,$pu,$quantite){
         if(Auth::check()){
             return DB::table('panier')->insert(
                 [
                     'article'=>$id_item,
                     'couleur'=>$color,
                     'taille'=>$taille,
+                    'pu'=>$pu,
                     'quantite'=>$quantite,
                     'user'=>$request->user()->id
                 ]
@@ -46,7 +47,11 @@ class panierController extends Controller
     */
     public function list_items(Request $request){
         if(Auth::check()){
-           return  DB::table('panier')->where('user','=',$request->user()->id)->get();
+           $panier_items=DB::table('panier')->where('user','=',$request->user()->id)->get();
+            foreach($panier_items as $item){
+                $item->article=DB::table('articles')->where('id','=',$item->article)->get();
+            }
+            return $panier_items;
         }
         else return "non_authenticated";
     }

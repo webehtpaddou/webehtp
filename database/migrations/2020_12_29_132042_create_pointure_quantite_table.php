@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePanierTable extends Migration
+class CreatePointureQuantiteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,23 @@ class CreatePanierTable extends Migration
      */
     public function up()
     {
-        Schema::create('panier', function (Blueprint $table) {
+        Schema::create('pointure_quantite', function (Blueprint $table) {
             $table->id();
+            $table->string('pointure');
+            $table->unsignedInteger('quantite')->default(0);
             $table->unsignedBigInteger('article');
             $table->foreign('article')->references('id')->on('articles');
-            $table->string('couleur');
-            $table->string('taille');
-            $table->double('pu');
-            $table->unsignedInteger('quantite');
-            $table->unsignedBigInteger('user');
-            $table->foreign('user')->references('id')->on('users');
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('panier');
+        Schema::dropIfExists('pointure_quantite');
     }
 }

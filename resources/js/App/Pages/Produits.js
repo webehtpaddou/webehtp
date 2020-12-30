@@ -11,7 +11,7 @@ class Produits extends Component {
     componentDidMount(){
         fetch("/products")
         .then(body=>body.json())
-        .then(obj=>{this.setState({products:obj})})
+        .then(obj=>{console.log(obj);this.setState({products:obj})})
     }
     handleTrans=(e)=>{
         let i=e.target.getAttribute("data-index")
@@ -37,7 +37,7 @@ class Produits extends Component {
                                         </div>
                                         <div className="product-price">
                                             <h3>{elt.prix_unitaire}<span>DH</span></h3>
-                                            <Link data-index={i} to="/details" className="btn" href="">Details</Link>
+                                            <Link data-index={i} onClick={this.handleTrans} to="/details" className="btn" href="">Details</Link>
                                         </div>
                                     </div>
                                 </div>
