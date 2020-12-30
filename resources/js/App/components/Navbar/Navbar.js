@@ -50,7 +50,7 @@ class Navbar extends Component {
                 <div className="navbar-nav mr-auto">
                   <a href="/" className="nav-item nav-link active">Accueil</a>
                   <Link to="/produits" className="nav-item nav-link">Produits</Link>
-                  <a href="cart.html" className="nav-item nav-link">Panier</a>
+                  <Link to="/panier" className="nav-item nav-link">Panier</Link>
                 </div>
                 {this.state.user_authenticated?
                 <div className="navbar-nav ml-auto">
@@ -66,7 +66,7 @@ class Navbar extends Component {
                 <div className="navbar-nav ml-auto">
                   <div className="nav-item dropdown">
                     <a href="#" id="user" className="nav-link dropdown-toggle" data-toggle="dropdown">Espace client</a>
-                    <div className="dropdown-menu">
+                    <div className="k7az dropdown-menu">
                       <Link to="/authentification" className="dropdown-item">S'authentifier</Link>
                     </div>
                   </div>

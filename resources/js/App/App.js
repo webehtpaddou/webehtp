@@ -7,6 +7,7 @@ import Authentification from './Pages/Authentification'
 import Profile from './Pages/Profile'
 import Produits from './Pages/Produits'
 import Panier from './Pages/Panier'
+import Paiement from './Pages/Paiement'
 import DetailsProduit from './Pages/DetailsProduit'
 class App extends Component {
   constructor(props){
@@ -39,6 +40,7 @@ class App extends Component {
             <Route exact path='/produits' component={()=><Produits trans={this.f}/>} />
             <Route path='/details' component={()=><DetailsProduit trans1={this.f1} trans={this.g}/>} />
             <Route path="/panier" component={Panier}/>
+            <Route path="/paiement" component={Paiement}/>
           </Switch>
           <div className="footer">
             <div className="container-fluid">

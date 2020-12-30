@@ -4,7 +4,7 @@ class DetailsProduit extends Component {
     constructor(props){
         super(props)
         this.state={
-            product:""
+            product:"",message:""
         }
     }
     componentDidMount(){
@@ -15,6 +15,8 @@ class DetailsProduit extends Component {
         e.preventDefault()
         let temp=this.state.product
         fetch('panier/add_item/'+temp.id+'/s/noir/'+temp.prix_unitaire+'/1')
+        .then(body=>body.text())
+        .then(msg=>{console.log(msg)})
     }
   render() {
     return (

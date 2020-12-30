@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Link} from "react-router-dom"
 
 class Panier extends Component {
     constructor(props){
@@ -128,8 +129,7 @@ class Panier extends Component {
                                         <h2>Grand Total<span>{this.state.total}DH</span></h2>
                                     </div>
                                     <div className="cart-btn">
-                                        <button>Mettre à jour le panier</button>
-                                        <button>Passer au payement</button>
+                                        <Link to="/paiement"><button>Passer au payement</button></Link>
                                     </div>
                                 </div>
                             </div>
