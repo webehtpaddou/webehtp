@@ -90,7 +90,8 @@ class panierController extends Controller
                     'ville'=>$request->input('ville'),
                     'telephone'=>$request->input('tel'),
                     'email'=>$request->input('email'),
-                    'id_user'=>$request->user()->id
+                    'id_user'=>$request->user()->id,
+                    'adresse'=>$request->input('adresse')
                 ]
                 );
             if($client_id!=0){
