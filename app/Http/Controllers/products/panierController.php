@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class panierController extends Controller
 {
@@ -73,6 +74,46 @@ class panierController extends Controller
                     'quantite'=>$quantite
                 ]
                 );
+        }
+        else return "non_authenticated";
+    }
+    public function mailto($client,$commande){
+
+    }
+    public function client_data(Request $request){
+        if(Auth::check()){
+            $client_id=DB::table('clients')->insertGetId(
+                [
+                    'nom'=>$request->input('nom'),
+                    'prenom'=>$request->input('prenom'),
+                    'pays'=>$request->input('pays'),
+                    'ville'=>$request->input('ville'),
+                    'telephone'=>$request->input('tel'),
+                    'email'=>$request->input('email'),
+                    'id_user'=>$request->user()->id
+                ]
+                );
+            if($client_id!=0){
+                $panier_items=$this->list_items($request);
+                $prix_total=0;
+                $delivery_tax=10;
+                foreach($panier_items as $item){
+                    $prix_total+=$item->pu;
+                }
+                if(DB::table('commandes')->insert(
+                    [
+                        'data'=>$panier_items,
+                        'client_id'=>$client_id,
+                        'prix_total'=>$prix_total+$delivery_tax,
+                        'adresse'=>$request->input('adresse')
+                    ]
+                    )){
+                        $this->mailto(1,1); //Sends a mail to the client
+                        return "commande enregistrée avec succès!!!";
+                    }
+
+            }
+            else{return "db_error";}
         }
         else return "non_authenticated";
     }

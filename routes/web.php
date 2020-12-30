@@ -54,7 +54,8 @@ Route::get('/panier/list_items/', ['\App\Http\Controllers\products\panierControl
     //modifie les choix de taille, couleur,et quantité d'un élément du panier
 Route::get('/panier/change_item/{id_item}/{taille}/{color}/{quantite}', ['\App\Http\Controllers\products\panierController','change_item']);
 
-
+//Commande
+Route::post('commande',['App\Http\Controllers\products\panierController','client_data']);
 
 //Routes Newsletter
 //Poster l'email entré à cette adresse;
