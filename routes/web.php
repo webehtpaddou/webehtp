@@ -44,14 +44,14 @@ Route::get('users/identity', [App\Http\Controllers\user\userController::class,'u
 //APIs Panier
 
     //ajoute un article dans le panier
-Route::get('panier/add_item/{$id_item}/{$taille}/{$color}/{$pu}/{$quantite}', ['\App\Http\Controllers\products\panierController','add_item']);
+Route::get('/panier/add_item/{id_item}/{taille}/{color}/{pu}/{quantite}', ['\App\Http\Controllers\products\panierController','add_item']);
 
     //retire un élément du panier( id représente l'identifiant de l'élément du panier)
-Route::get('panier/remove_item/{$id}', ['\App\Http\Controllers\products\panierController','remove_item']);
+Route::get('/panier/remove_item/{id}', ['\App\Http\Controllers\products\panierController','remove_item']);
     ///Liste tous les éléments du panier
-Route::get('panier/list_items/', ['\App\Http\Controllers\products\panierController','list_items']);
+Route::get('/panier/list_items/', ['\App\Http\Controllers\products\panierController','list_items']);
     //modifie les choix de taille, couleur,et quantité d'un élément du panier
-Route::get('panier/change_item/{$id_item}/{$taille}/{$color}/{$quantite}', ['\App\Http\Controllers\products\panierController','add_item']);
+Route::get('/panier/change_item/{id_item}/{$taille}/{$color}/{$quantite}', ['\App\Http\Controllers\products\panierController','add_item']);
 
 
 
