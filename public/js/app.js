@@ -72136,15 +72136,24 @@ var DetailsProduit = /*#__PURE__*/function (_Component) {
       e.preventDefault();
       var temp = _this.state.product;
       fetch('panier/add_item/' + temp.id + '/s/noir/' + temp.prix_unitaire + '/1').then(function (body) {
-        return body.text();
+        return body.status;
       }).then(function (msg) {
-        console.log(msg);
+        _this.setState({
+          status: msg
+        });
+
+        if (msg >= 200 && msg <= 299) _this.setState({
+          message: "Produit ajouté au panier avec succés."
+        });else _this.setState({
+          message: "Erreur."
+        });
       });
     });
 
     _this.state = {
       product: "",
-      message: ""
+      message: "",
+      status: ""
     };
     return _this;
   }
@@ -72206,7 +72215,11 @@ var DetailsProduit = /*#__PURE__*/function (_Component) {
         href: "#"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fa fa-shopping-cart"
-      }), "Ajouter au panier")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), "Ajouter au panier")), this.state.status >= 200 && this.state.status <= 299 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "text-success"
+      }, this.state.message) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "text-danger"
+      }, this.state.message))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row product-detail-bottom"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-lg-12"
@@ -72718,6 +72731,11 @@ var Panier = /*#__PURE__*/function (_Component) {
       var i = parseInt(e.target.getAttribute("data-index"));
       var temp = _this.state.items;
       fetch('/panier/remove_item/' + temp[i].id);
+
+      _this.setState({
+        total: _this.state.total - temp[i].quantite * temp[i].prix_unitaire
+      });
+
       temp.splice(i, 1);
 
       _this.setState({
@@ -72739,7 +72757,6 @@ var Panier = /*#__PURE__*/function (_Component) {
       fetch('/panier/list_items/').then(function (body) {
         return body.json();
       }).then(function (rep) {
-        console.log(rep);
         var total = 0;
         var temp = rep.map(function (elt) {
           total = total + elt.quantite * elt.pu;
@@ -72920,8 +72937,6 @@ var Produits = /*#__PURE__*/function (_Component) {
       fetch("/products").then(function (body) {
         return body.json();
       }).then(function (obj) {
-        console.log(obj);
-
         _this2.setState({
           products: obj
         });

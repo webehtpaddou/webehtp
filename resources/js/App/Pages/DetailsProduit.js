@@ -4,7 +4,7 @@ class DetailsProduit extends Component {
     constructor(props){
         super(props)
         this.state={
-            product:"",message:""
+            product:"",message:"",status:""
         }
     }
     componentDidMount(){
@@ -15,8 +15,13 @@ class DetailsProduit extends Component {
         e.preventDefault()
         let temp=this.state.product
         fetch('panier/add_item/'+temp.id+'/s/noir/'+temp.prix_unitaire+'/1')
-        .then(body=>body.text())
-        .then(msg=>{console.log(msg)})
+        .then(body=>body.status)
+        .then(msg=>{
+            this.setState({status:msg})
+            if(msg>=200 && msg<=299)
+            this.setState({message:"Produit ajouté au panier avec succés."})
+            else this.setState({message:"Erreur."})
+        })
     }
   render() {
     return (
@@ -49,6 +54,7 @@ class DetailsProduit extends Component {
                                     <div className="action">
                                         <a className="btn" onClick={this.addPanier} href="#"><i className="fa fa-shopping-cart"></i>Ajouter au panier</a>
                                     </div>
+                                    {this.state.status>=200 && this.state.status<=299 ?<p className="text-success">{this.state.message}</p>:<p className="text-danger">{this.state.message}</p>}
                                 </div>
                             </div>
                         </div>
@@ -84,6 +90,7 @@ class DetailsProduit extends Component {
                                 <li className="nav-item">
                                     <a className="nav-link" href="#"><i className="fa fa-tshirt"></i>Hommes et femmes</a>
                                 </li>
+                                
                             </ul>
                         </nav>
                     </div>
