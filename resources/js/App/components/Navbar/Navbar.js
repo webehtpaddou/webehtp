@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import {Link} from "react-router-dom"
-import logo from "./logo.png"
 
 class Navbar extends Component {
   constructor(props){
     super(props)
-    this.state={user_authenticated:false,user_name:""}
+    this.state={user_authenticated:false,user_name:"",nbrPanier:0}
   }
   componentDidMount=()=>{
     
@@ -49,8 +48,8 @@ class Navbar extends Component {
               </button>
               <div className="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                 <div className="navbar-nav mr-auto">
-                  <a href="index.html" className="nav-item nav-link active">Accueil</a>
-                  <a href="product-list.html" className="nav-item nav-link">Produits</a>
+                  <a href="/" className="nav-item nav-link active">Accueil</a>
+                  <Link to="/produits" className="nav-item nav-link">Produits</Link>
                   <a href="cart.html" className="nav-item nav-link">Panier</a>
                 </div>
                 {this.state.user_authenticated?
@@ -68,8 +67,7 @@ class Navbar extends Component {
                   <div className="nav-item dropdown">
                     <a href="#" id="user" className="nav-link dropdown-toggle" data-toggle="dropdown">Espace client</a>
                     <div className="dropdown-menu">
-                      <Link to="/connexion" className="dropdown-item">Se connecter</Link>
-                      <Link to="/inscription" className="dropdown-item">S'inscrire</Link>
+                      <Link to="/authentification" className="dropdown-item">S'authentifier</Link>
                     </div>
                   </div>
                 </div>
@@ -84,8 +82,8 @@ class Navbar extends Component {
                 <div className="row align-items-center">
                     <div className="col-md-3">
                         <div className="logo">
-                            <a href="index.html">
-                                <img src={logo} alt="Logo"/>
+                            <a href="/">
+                            <img src="https://imgupload.io/images/2020/12/29/logof5f41476f46b637e.png" title="source: imgur.com" />
                             </a>
                         </div>
                     </div>
@@ -95,14 +93,7 @@ class Navbar extends Component {
                             <button><i className="fa fa-search"></i></button>
                         </div>
                     </div>
-                    <div className="col-md-3">
-                        <div className="user">
-                            <a href="cart.html" className="btn cart">
-                                <i className="fa fa-shopping-cart"></i>
-                                <span>(0)</span>
-                            </a>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
