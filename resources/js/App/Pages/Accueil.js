@@ -154,45 +154,6 @@ class Accueil extends Component {
             </div>
         </div>
 
-        <div id="best_selling" className="featured-product product">
-            <div className="container-fluid">
-                <div className="section-header">
-                    <h1>best selling</h1>
-                </div>
-                <div className="row align-items-center product-slider product-slider-4">
-                  {this.state.best_sales.map((elt,i)=>{
-                    return(
-                      <div key={i} className="col-lg-3">
-                        <div className="product-item">
-                            <div className="product-title">
-                                <a href="#">{elt.name}</a>
-                                <div className="ratting">
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <div className="product-image">
-                                <a href="product-detail.html">
-                                    <img src={elt.img} alt="Product Image"/>
-                                </a>
-                            </div>
-                            <div className="product-price">
-                                <h3>{elt.price}<span>DH</span></h3>
-                                <Link className="btn" to="/details">Details</Link>
-                            </div>
-                        </div>
-                      </div>
-                    )
-                  })
-                    
-                  }
-                </div>
-            </div>
-        </div>
-
         <div className="newsletter">
             <div className="container-fluid">
                 <div className="row">

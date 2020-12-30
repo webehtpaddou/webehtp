@@ -5,65 +5,13 @@ class Produits extends Component {
     constructor(props) {
         super(props)
         this.state={
-            products:[
-                {
-                    id:0,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-8.jpg",
-                    description:"une jolie description",    
-                    price:100
-                },
-                {
-                    id:1,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-1.jpg",
-                    description:"une jolie description",
-                    price:100
-                },
-                {
-                    id:2,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-2.jpg",
-                    description:"une jolie description",
-                    price:100
-                },
-                {
-                    id:3,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-3.jpg",
-                    description:"une jolie description",
-                    price:100
-                },
-                {
-                    id:4,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-4.jpg",
-                    description:"une jolie description",
-                    price:100
-                },
-                {
-                    id:5,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-5.jpg",
-                    description:"une jolie description",
-                    price:100
-                },
-                {
-                    id:6,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-6.jpg",
-                    description:"une jolie description",
-                    price:100
-                },
-                {
-                    id:7,
-                    name:"Article test",
-                    img:"https://imgupload.io/images/2020/12/29/product-7.jpg",
-                    description:"une jolie description",
-                    price:100
-                }
-            ]
+            products:[]
         }
+    }
+    componentDidMount(){
+        fetch("/products")
+        .then(body=>body.json())
+        .then(obj=>{this.setState({products:obj})})
     }
     handleTrans=(e)=>{
         let i=e.target.getAttribute("data-index")
@@ -82,14 +30,14 @@ class Produits extends Component {
                                 <div key={i} className="col-md-4">
                                     <div className="product-item">
                                         <div className="product-title">
-                                            <a href="#">{elt.name}</a>
+                                            <a href="#">{elt.nom}</a>
                                         </div>
                                         <div className="product-image">
                                             <img src={elt.img} alt="Product Image"/>
                                         </div>
                                         <div className="product-price">
-                                            <h3>{elt.price}<span>DH</span></h3>
-                                            <Link data-index={i} onClick={this.handleTrans} to="/details" className="btn" href="">Details</Link>
+                                            <h3>{elt.prix_unitaire}<span>DH</span></h3>
+                                            <Link data-index={i} to="/details" className="btn" href="">Details</Link>
                                         </div>
                                     </div>
                                 </div>

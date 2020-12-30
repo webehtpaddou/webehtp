@@ -4,7 +4,7 @@ import {Link} from "react-router-dom"
 class Navbar extends Component {
   constructor(props){
     super(props)
-    this.state={user_authenticated:false,user_name:""}
+    this.state={user_authenticated:false,user_name:"",nbrPanier:0}
   }
   componentDidMount=()=>{
     
@@ -48,7 +48,7 @@ class Navbar extends Component {
               </button>
               <div className="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                 <div className="navbar-nav mr-auto">
-                  <Link to="/" className="nav-item nav-link active">Accueil</Link>
+                  <a href="/" className="nav-item nav-link active">Accueil</a>
                   <Link to="/produits" className="nav-item nav-link">Produits</Link>
                   <a href="cart.html" className="nav-item nav-link">Panier</a>
                 </div>
@@ -93,14 +93,7 @@ class Navbar extends Component {
                             <button><i className="fa fa-search"></i></button>
                         </div>
                     </div>
-                    <div className="col-md-3">
-                        <div className="user">
-                            <a href="cart.html" className="btn cart">
-                                <i className="fa fa-shopping-cart"></i>
-                                <span>(0)</span>
-                            </a>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

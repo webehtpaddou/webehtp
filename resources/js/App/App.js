@@ -6,27 +6,39 @@ import Accueil from './Pages/Accueil'
 import Authentification from './Pages/Authentification'
 import Profile from './Pages/Profile'
 import Produits from './Pages/Produits'
+import Panier from './Pages/Panier'
 import DetailsProduit from './Pages/DetailsProduit'
 class App extends Component {
   constructor(props){
     super(props)
-    this.state={product:{}}
+    this.state={product:{},item:{}}
   }
   f=(p)=>{
     this.setState({product:p})
   }
   g=()=>this.state.product
+  f1=(p)=>{
+    let temp={id:p.id,nom:p.nom,prix_unitaire:p.prix_unitaire,total:p.prix_unitaire}
+    this.setState({item:temp})
+  }
+  g1=()=>this.state.item
+  f2=(p)=>{
+    let temp={id:p.id,nom:p.nom,prix_unitaire:p.prix_unitaire,total:p.prix_unitaire}
+    this.setState({item:temp})
+  }
+  g2=()=>this.state.item
   render(){
   return (
       <Router>
         <div>
-          <Navbar/>
+          <Navbar trans1={this.g1}/>
           <Switch>
             <Route path='/' exact component={Accueil} />
             <Route path='/authentification' component={Authentification} />
             <Route path='/profile' component={Profile} />
             <Route exact path='/produits' component={()=><Produits trans={this.f}/>} />
-            <Route path='/details' component={()=><DetailsProduit trans={this.g}/>} />
+            <Route path='/details' component={()=><DetailsProduit trans1={this.f1} trans={this.g}/>} />
+            <Route path="/panier" component={Panier}/>
           </Switch>
           <div className="footer">
             <div className="container-fluid">

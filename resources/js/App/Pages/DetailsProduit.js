@@ -10,6 +10,11 @@ class DetailsProduit extends Component {
     componentDidMount(){
         this.setState({product:this.props.trans()})
     }
+    addPanier(){
+        let temp=this.state.product
+        fetch('panier/add_item/'+temp.id+'/{$taille}/{$quantite}')
+        this.props.trans1(this.state.product)
+    }
   render() {
     return (
         <div className="product-detail">
@@ -26,7 +31,7 @@ class DetailsProduit extends Component {
                             </div>
                             <div className="col-md-7">
                                 <div className="product-content">
-                                    <div className="title"><h2>{this.state.product.name}</h2></div>
+                                    <div className="title"><h2>{this.state.product.nom}</h2></div>
                                     <div className="ratting">
                                         <i className="fa fa-star"></i>
                                         <i className="fa fa-star"></i>
@@ -36,10 +41,10 @@ class DetailsProduit extends Component {
                                     </div>
                                     <div className="price">
                                         <h4>Prix:</h4>
-                                        <p>{this.state.product.price}DH</p>
+                                        <p>{this.state.product.prix_unitaire}DH</p>
                                     </div>
                                     <div className="action">
-                                        <a className="btn" href="#"><i className="fa fa-shopping-cart"></i>Ajouter au panier</a>
+                                        <a className="btn" onClick={this.addPanier} href="#"><i className="fa fa-shopping-cart"></i>Ajouter au panier</a>
                                     </div>
                                 </div>
                             </div>

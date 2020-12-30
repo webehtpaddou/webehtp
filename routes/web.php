@@ -13,10 +13,14 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+
+Route::get('/', [App\Http\Controllers\AccueilController::class, 'index'])->name('accueil');
+
 Route::view("/","app");
 Route::view("/authentification","app");
 Route::view("/produits","app");
 Route::view("/details","app");
+Route::view("/panier","app");
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -34,3 +38,24 @@ Route::get('/products', [App\Http\Controllers\products\productsController::class
 Route::get('users/is_authenticated', [App\Http\Controllers\user\userController::class,'is_authenticated']);
 //retourne l'identité du client sous format json
 Route::get('users/identity', [App\Http\Controllers\user\userController::class,'user']);
+
+//Route::get('/login', [App\Http\Controllers\user\userController::class,'user']);
+
+
+//APIs Panier
+
+    //ajoute un article dans le panier
+Route::get('panier/add_item/{$id_item}/{$taille}/{$quantite}', ['\App\Http\Controllers\products\panierController','add_item']);
+
+    //retire un élément du panier( id représente l'identifiant de l'élément du panier)
+Route::get('panier/remove_item/{$id}', ['\App\Http\Controllers\products\panierController','remove_item']);
+    ///Liste tous les éléments du panier
+Route::get('panier/list_items/', ['\App\Http\Controllers\products\panierController','list_items']);
+    //modifie les choix de taille, couleur,et quantité d'un élément du panier
+Route::get('panier/change_item/{$id_item}/{$taille}/{color}/{$quantite}', ['\App\Http\Controllers\products\panierController','add_item']);
+
+
+
+//Routes Newsletter
+//Poster l'email entré à cette adresse;
+Route::post('/news_letter', 'subscribe_news@subscribe');
