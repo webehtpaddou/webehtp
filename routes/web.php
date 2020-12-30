@@ -55,7 +55,7 @@ Route::get('/panier/list_items/', ['\App\Http\Controllers\products\panierControl
 Route::get('/panier/change_item/{id_item}/{taille}/{color}/{quantite}', ['\App\Http\Controllers\products\panierController','change_item']);
 
 //Commande
-Route::post('commande',['App\Http\Controllers\products\panierController','client_data']);
+Route::post('/commande',['App\Http\Controllers\products\panierController','client_data']);
 
 //Routes Newsletter
 //Poster l'email entré à cette adresse;
