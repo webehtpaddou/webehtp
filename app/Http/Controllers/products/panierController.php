@@ -82,3 +82,5 @@ class panierController extends Controller
 /*
 *Toutes les fonctions retournent "non_authenticated si l'utilisateur n'est pas authentifié
 *true si l'opération a ete effectuée avec succès, et false sinon
+*/
+
