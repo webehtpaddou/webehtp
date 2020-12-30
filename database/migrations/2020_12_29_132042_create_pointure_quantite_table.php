@@ -18,7 +18,7 @@ class CreatePointureQuantiteTable extends Migration
             $table->string('pointure');
             $table->unsignedInteger('quantite')->default(0);
             $table->unsignedBigInteger('article');
-            $table->foreign('article')->references('id')->on('article');
+            $table->foreign('article')->references('id')->on('articles');
             $table->timestamps();
         });
     }

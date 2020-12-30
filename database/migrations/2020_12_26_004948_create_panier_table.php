@@ -19,6 +19,7 @@ class CreatePanierTable extends Migration
             $table->foreign('article')->references('id')->on('articles');
             $table->string('couleur');
             $table->string('taille');
+            $table->double('pu');
             $table->unsignedInteger('quantite');
             $table->unsignedBigInteger('user');
             $table->foreign('user')->references('id')->on('users');
