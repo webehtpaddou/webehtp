@@ -12,7 +12,6 @@ class Panier extends Component {
         fetch('/panier/list_items/')
         .then(body=>body.json())
         .then(rep=>{
-            console.log(rep)
             let total=0
             let temp=rep.map((elt)=>{
                 total=total+elt.quantite*elt.pu
@@ -62,6 +61,7 @@ class Panier extends Component {
         let i=parseInt(e.target.getAttribute("data-index"))
         let temp=this.state.items
         fetch('/panier/remove_item/'+temp[i].id)
+        this.setState({total:this.state.total-temp[i].quantite*temp[i].prix_unitaire})
         temp.splice(i,1)
         this.setState({items:temp})
     }

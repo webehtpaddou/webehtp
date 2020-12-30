@@ -11,7 +11,7 @@ class Produits extends Component {
     componentDidMount(){
         fetch("/products")
         .then(body=>body.json())
-        .then(obj=>{console.log(obj);this.setState({products:obj})})
+        .then(obj=>{this.setState({products:obj})})
     }
     handleTrans=(e)=>{
         let i=e.target.getAttribute("data-index")
