@@ -72127,7 +72127,8 @@ var DetailsProduit = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
 
-    _defineProperty(_assertThisInitialized(_this), "addPanier", function () {
+    _defineProperty(_assertThisInitialized(_this), "addPanier", function (e) {
+      e.preventDefault();
       var temp = _this.state.product;
       fetch('panier/add_item/' + temp.id + '/s/noir/' + temp.prix_unitaire + '/1');
     });
@@ -72330,6 +72331,7 @@ var Panier = /*#__PURE__*/function (_Component) {
       temp[i].quantite = temp[i].quantite > 0 ? temp[i].quantite - 1 : 0;
       var old = temp[i].total;
       temp[i].total = temp[i].quantite * temp[i].prix_unitaire;
+      fetch('/panier/change_item/' + temp[i].id + '/s/noir/' + temp[i].quantite);
 
       _this.setState({
         total: _this.state.total + temp[i].total - old
@@ -72346,6 +72348,7 @@ var Panier = /*#__PURE__*/function (_Component) {
       temp[i].quantite = temp[i].quantite + 1;
       var old = temp[i].total;
       temp[i].total = temp[i].quantite * temp[i].prix_unitaire;
+      fetch('/panier/change_item/' + temp[i].id + '/s/noir/' + temp[i].quantite);
 
       _this.setState({
         total: _this.state.total + temp[i].total - old
@@ -72375,6 +72378,7 @@ var Panier = /*#__PURE__*/function (_Component) {
     _defineProperty(_assertThisInitialized(_this), "deleteItem", function (e) {
       var i = parseInt(e.target.getAttribute("data-index"));
       var temp = _this.state.items;
+      fetch('/panier/remove_item/' + temp[i].id);
       temp.splice(i, 1);
 
       _this.setState({
@@ -72383,22 +72387,7 @@ var Panier = /*#__PURE__*/function (_Component) {
     });
 
     _this.state = {
-      items: [{
-        id: 1,
-        nom: "belle robe",
-        img: "https://imgupload.io/images/2020/12/29/product-1.jpg",
-        prix_unitaire: 100,
-        total: 100,
-        quantite: 1
-      }, {
-        id: 1,
-        nom: "belle robe",
-        img: "https://imgupload.io/images/2020/12/29/product-1.jpg",
-        prix_unitaire: 100,
-        total: 100,
-        quantite: 1
-      }],
-      total: 200
+      items: []
     };
     return _this;
   }
@@ -72406,16 +72395,35 @@ var Panier = /*#__PURE__*/function (_Component) {
   _createClass(Panier, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      fetch('/users/is_authenticated').then(function (body) {
-        return body.text();
+      var _this2 = this;
+
+      fetch('/panier/list_items/').then(function (body) {
+        return body.json();
       }).then(function (rep) {
-        if (!rep) location.href = "/authentification";
+        console.log(rep);
+        var total = 0;
+        var temp = rep.map(function (elt) {
+          total = total + elt.quantite * elt.pu;
+          return {
+            id: elt.id,
+            nom: elt.article[0].nom,
+            img: elt.article[0].img,
+            prix_unitaire: elt.pu,
+            quantite: elt.quantite,
+            total: elt.quantite * elt.pu
+          };
+        });
+
+        _this2.setState({
+          items: temp,
+          total: total
+        });
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "cart-page"
@@ -72451,26 +72459,26 @@ var Panier = /*#__PURE__*/function (_Component) {
           className: "qty"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           "data-index": i,
-          onClick: _this2.qteChangem,
+          onClick: _this3.qteChangem,
           className: "btn-minus"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           "data-index": i,
           className: "fa fa-minus"
         })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           "data-index": i,
-          onChange: _this2.qteChange,
+          onChange: _this3.qteChange,
           type: "text",
           value: elt.quantite
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           "data-index": i,
-          onClick: _this2.qteChangep,
+          onClick: _this3.qteChangep,
           className: "btn-plus"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           "data-index": i,
           className: "fa fa-plus"
         })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, elt.total, "DH"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           "data-index": i,
-          onClick: _this2.deleteItem
+          onClick: _this3.deleteItem
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           "data-index": i,
           className: "fa fa-trash"

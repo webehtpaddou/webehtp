@@ -4,32 +4,28 @@ class Panier extends Component {
     constructor(props){
         super(props)
         this.state={
-            items:[
-                {
-                    id:1,
-                    nom:"belle robe",
-                    img:"https://imgupload.io/images/2020/12/29/product-1.jpg",
-                    prix_unitaire:100,
-                    total:100,
-                    quantite:1
-                },
-                {
-                    id:1,
-                    nom:"belle robe",
-                    img:"https://imgupload.io/images/2020/12/29/product-1.jpg",
-                    prix_unitaire:100,
-                    total:100,
-                    quantite:1
-                }
-            ],
-            total:200
+            items:[]
         }
     }
     componentDidMount(){
-        fetch('/users/is_authenticated')
-        .then(body=>body.text())
+        fetch('/panier/list_items/')
+        .then(body=>body.json())
         .then(rep=>{
-            if(!rep) location.href="/authentification"
+            console.log(rep)
+            let total=0
+            let temp=rep.map((elt)=>{
+                total=total+elt.quantite*elt.pu
+                return {
+                    id:elt.id,
+                    nom:elt.article[0].nom,
+                    img:elt.article[0].img,
+                    prix_unitaire:elt.pu,
+                    quantite:elt.quantite,
+                    total:elt.quantite*elt.pu
+                }
+            })
+            this.setState({items:temp,total:total})
+            
         })
     }
     qteChangem=(e)=>{
@@ -38,6 +34,7 @@ class Panier extends Component {
         temp[i].quantite=temp[i].quantite>0?temp[i].quantite-1:0
         let old=temp[i].total
         temp[i].total=temp[i].quantite*temp[i].prix_unitaire
+        fetch('/panier/change_item/'+temp[i].id+'/s/noir/'+temp[i].quantite)
         this.setState({total:this.state.total+temp[i].total-old})
         this.setState({items:temp})
     }
@@ -47,6 +44,7 @@ class Panier extends Component {
         temp[i].quantite=temp[i].quantite+1
         let old=temp[i].total
         temp[i].total=temp[i].quantite*temp[i].prix_unitaire
+        fetch('/panier/change_item/'+temp[i].id+'/s/noir/'+temp[i].quantite)
         this.setState({total:this.state.total+temp[i].total-old})
         this.setState({items:temp})
     }
@@ -62,6 +60,7 @@ class Panier extends Component {
     deleteItem=(e)=>{
         let i=parseInt(e.target.getAttribute("data-index"))
         let temp=this.state.items
+        fetch('/panier/remove_item/'+temp[i].id)
         temp.splice(i,1)
         this.setState({items:temp})
     }

@@ -52,7 +52,7 @@ Route::get('/panier/remove_item/{id}', ['\App\Http\Controllers\products\panierCo
     ///Liste tous les éléments du panier
 Route::get('/panier/list_items/', ['\App\Http\Controllers\products\panierController','list_items']);
     //modifie les choix de taille, couleur,et quantité d'un élément du panier
-Route::get('/panier/change_item/{id_item}/{$taille}/{$color}/{$quantite}', ['\App\Http\Controllers\products\panierController','add_item']);
+Route::get('/panier/change_item/{id_item}/{taille}/{color}/{quantite}', ['\App\Http\Controllers\products\panierController','change_item']);
 
 
 

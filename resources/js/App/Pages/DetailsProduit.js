@@ -10,7 +10,9 @@ class DetailsProduit extends Component {
     componentDidMount(){
         this.setState({product:this.props.trans()})
     }
-    addPanier=()=>{
+    addPanier=(e)=>
+    {
+        e.preventDefault()
         let temp=this.state.product
         fetch('panier/add_item/'+temp.id+'/s/noir/'+temp.prix_unitaire+'/1')
     }
