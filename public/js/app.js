@@ -72917,6 +72917,22 @@ var Produits = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
 
+    _defineProperty(_assertThisInitialized(_this), "changePage", function (e) {
+      var c = e.target.innerHTML;
+
+      if (c == "Précédent") {
+        if (_this.state.selected >= 1) _this.setState({
+          selected: _this.state.selected - 1
+        });
+      } else if (c == "Suivant") {
+        if (_this.state.selected <= _this.state.products.length - 2) _this.setState({
+          selected: _this.state.selected + 1
+        });
+      } else if (_this.state.selected != parseInt(c) - 1) _this.setState({
+        selected: parseInt(c) - 1
+      });
+    });
+
     _defineProperty(_assertThisInitialized(_this), "handleTrans", function (e) {
       var i = e.target.getAttribute("data-index");
 
@@ -72924,12 +72940,25 @@ var Produits = /*#__PURE__*/function (_Component) {
     });
 
     _this.state = {
-      products: []
+      products: [],
+      selected: 0,
+      loaded: false
     };
     return _this;
   }
 
   _createClass(Produits, [{
+    key: "splitInPages",
+    value: function splitInPages(arr, n) {
+      var res = [];
+
+      while (arr.length > 0) {
+        res.push(arr.splice(0, n));
+      }
+
+      return res;
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
@@ -72938,7 +72967,8 @@ var Produits = /*#__PURE__*/function (_Component) {
         return body.json();
       }).then(function (obj) {
         _this2.setState({
-          products: obj
+          products: _this2.splitInPages(obj, 12),
+          loaded: true
         });
       });
     }
@@ -72957,7 +72987,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "col-lg-8"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
-      }, this.state.products.map(function (elt, i) {
+      }, this.state.loaded ? this.state.products[this.state.selected].map(function (elt, i) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: i,
           className: "col-md-4"
@@ -72981,7 +73011,35 @@ var Produits = /*#__PURE__*/function (_Component) {
           className: "btn",
           href: ""
         }, "Details"))));
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }) : "loading..."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-12"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
+        "aria-label": "Page navigation example"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "pagination justify-content-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: this.state.selected === 0 ? "page-item hidepg" : "page-item"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        onClick: this.changePage,
+        className: "page-link",
+        href: "#",
+        tabIndex: "-1"
+      }, "Pr\xE9c\xE9dent")), this.state.products.map(function (e, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: i,
+          className: _this3.state.selected === i ? "page-item active" : "page-item"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          onClick: _this3.changePage,
+          className: "page-link",
+          href: "#"
+        }, i + 1));
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: this.state.selected === this.state.products.length - 1 ? "page-item hidepg" : "page-item"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        onClick: this.changePage,
+        className: "page-link",
+        href: "#"
+      }, "Suivant")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-lg-4 sidebar"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "sidebar-widget category"

@@ -5,13 +5,34 @@ class Produits extends Component {
     constructor(props) {
         super(props)
         this.state={
-            products:[]
+            products:[],selected:0,loaded:false
         }
+    }
+    splitInPages(arr,n){
+        let res=[]
+        while(arr.length>0){
+            res.push(arr.splice(0,n))
+        }
+        return res
     }
     componentDidMount(){
         fetch("/products")
         .then(body=>body.json())
-        .then(obj=>{this.setState({products:obj})})
+        .then(obj=>{
+            this.setState({products:this.splitInPages(obj,12),loaded:true})}
+            )
+    }
+    changePage=(e)=>{
+        let c=e.target.innerHTML
+        if(c=="Précédent"){
+            if(this.state.selected>=1)
+                this.setState({selected:this.state.selected-1})
+        }
+        else if(c=="Suivant"){
+            if(this.state.selected<=this.state.products.length-2)
+                this.setState({selected:this.state.selected+1})
+        }
+        else if(this.state.selected!=parseInt(c)-1) this.setState({selected:parseInt(c)-1})
     }
     handleTrans=(e)=>{
         let i=e.target.getAttribute("data-index")
@@ -25,7 +46,7 @@ class Produits extends Component {
                 <div className="col-lg-8">
                     <div className="row">
                         {
-                            this.state.products.map((elt,i)=>{
+                            this.state.loaded?this.state.products[this.state.selected].map((elt,i)=>{
                                 return(
                                 <div key={i} className="col-md-4">
                                     <div className="product-item">
@@ -41,8 +62,23 @@ class Produits extends Component {
                                         </div>
                                     </div>
                                 </div>
-                            )})
+                            )}):"loading..."
                         }
+                    </div>
+                    <div className="col-md-12">
+                        <nav aria-label="Page navigation example">
+                            <ul className="pagination justify-content-center">
+                                <li className={this.state.selected===0?"page-item hidepg":"page-item"}>
+                                    <a onClick={this.changePage} className="page-link" href="#" tabIndex="-1">Précédent</a>
+                                </li>
+                                {this.state.products.map((e,i)=>
+                                    <li key={i} className={this.state.selected===i?"page-item active":"page-item"}><a onClick={this.changePage} className="page-link" href="#">{i+1}</a></li>
+                                )}
+                                <li className={this.state.selected===this.state.products.length-1?"page-item hidepg":"page-item"}>
+                                    <a onClick={this.changePage} className="page-link" href="#">Suivant</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>           
 
