@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\products;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Mail\commandeMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use stdClass;
 
 class panierController extends Controller
 {
@@ -77,8 +79,8 @@ class panierController extends Controller
         }
         else return "non_authenticated";
     }
-    public function mailto($client,$commande){
-
+    public function mailto(Request $request){
+        Mail::to($request->user()->email)->send(new commandeMail);
     }
     public function client_data(Request $request){
         if(Auth::check()){
@@ -101,15 +103,22 @@ class panierController extends Controller
                 foreach($panier_items as $item){
                     $prix_total+=$item->pu;
                 }
-                if(DB::table('commandes')->insert(
+                $id_commande=0;
+                $id_commande=DB::table('commandes')->insertGetId(
                     [
                         'data'=>$panier_items,
                         'client_id'=>$client_id,
                         'prix_total'=>$prix_total+$delivery_tax,
+                        'prix_total_ht'=>$prix_total+$delivery_tax,
                         'adresse'=>$request->input('adresse')
                     ]
-                    )){
-                        $this->mailto(1,1); //Sends a mail to the client
+                    );
+                if($id_commande!=0){
+                        $client=DB::table('clients')->where('id','=',$client_id)->get();
+                        $this->mailto($request); //Sends a mail to the client
+
+                        //vider panier
+                        DB::table('panier')->where('user','=',Auth::user()->id)->delete();
                         return "commande enregistrée avec succès!!!";
                     }
 
