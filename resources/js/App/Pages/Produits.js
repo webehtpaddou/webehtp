@@ -36,7 +36,9 @@ class Produits extends Component {
     }
     handleTrans=(e)=>{
         let i=e.target.getAttribute("data-index")
-        this.props.trans(this.state.products[i])
+        console.log(i)
+        console.log(this.state.products)
+        this.props.trans(this.state.products[this.state.selected][i])
     }
   render() {
     return (

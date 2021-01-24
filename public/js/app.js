@@ -71242,6 +71242,8 @@ var App = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "f", function (p) {
+      console.log(p);
+
       _this.setState({
         product: p
       });
@@ -72935,8 +72937,10 @@ var Produits = /*#__PURE__*/function (_Component) {
 
     _defineProperty(_assertThisInitialized(_this), "handleTrans", function (e) {
       var i = e.target.getAttribute("data-index");
+      console.log(i);
+      console.log(_this.state.products);
 
-      _this.props.trans(_this.state.products[i]);
+      _this.props.trans(_this.state.products[_this.state.selected][i]);
     });
 
     _this.state = {

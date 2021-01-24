@@ -15,6 +15,7 @@ class App extends Component {
     this.state={product:{},item:{}}
   }
   f=(p)=>{
+    console.log(p)
     this.setState({product:p})
   }
   g=()=>this.state.product
