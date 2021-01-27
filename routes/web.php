@@ -20,6 +20,8 @@ Route::view("/","app");
 Route::view("/authentification","app");
 Route::view("/produits","app");
 Route::view("/details","app");
+Route::view("/profile","app");
+Route::view("/admin","app");
 Route::view("/panier","app");
 Route::view("/paiement","app");
 Auth::routes();

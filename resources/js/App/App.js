@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Accueil from './Pages/Accueil'
 import Authentification from './Pages/Authentification'
 import Profile from './Pages/Profile'
+import Admin from './Pages/Admin'
 import Produits from './Pages/Produits'
 import Panier from './Pages/Panier'
 import Paiement from './Pages/Paiement'
@@ -38,6 +39,7 @@ class App extends Component {
             <Route path='/' exact component={Accueil} />
             <Route path='/authentification' component={Authentification} />
             <Route path='/profile' component={Profile} />
+            <Route path='/admin' component={Admin} />
             <Route exact path='/produits' component={()=><Produits trans={this.f}/>} />
             <Route path='/details' component={()=><DetailsProduit trans1={this.f1} trans={this.g}/>} />
             <Route path="/panier" component={Panier}/>
