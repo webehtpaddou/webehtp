@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\adminController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 /*
@@ -20,14 +22,12 @@ Route::view("/","app");
 Route::view("/authentification","app");
 Route::view("/produits","app");
 Route::view("/details","app");
-Route::view("/profile","app");
-Route::view("/admin","app");
 Route::view("/panier","app");
 Route::view("/paiement","app");
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/products', [App\Http\Controllers\products\productsController::class, 'index'])->name('produits');
+//Route::get('/products', [App\Http\Controllers\products\productsController::class, 'index'])->name('produits');
 Route::get('csrf/{secret}', function ($secret) {
     if($secret=='webehtpcsrfprovider'){
         //return view('tools.csrfProvider');
@@ -36,7 +36,12 @@ Route::get('csrf/{secret}', function ($secret) {
     else return 'Url Invalide!!!';
 });
 //retourne la liste des articles
-Route::get('/products', [App\Http\Controllers\products\productsController::class, 'index'])->name('produits');
+Route::get('/products/{categories}/{prix}/{taille}/', [App\Http\Controllers\products\productsController::class, 'index'])
+        ->name('produits');
+Route::get('/products', [App\Http\Controllers\products\productsController::class, 'all'])
+        ->name('produitsall');
+
+
 //retourne 1 si l'utilisateur est connecté et 0 sinon
 Route::get('users/is_authenticated', [App\Http\Controllers\user\userController::class,'is_authenticated']);
 //retourne l'identité du client sous format json
@@ -61,5 +66,48 @@ Route::get('/panier/change_item/{id_item}/{taille}/{color}/{quantite}', ['\App\H
 Route::post('commande',['App\Http\Controllers\products\panierController','client_data']);
 
 //Routes Newsletter
-//Poster l'email entré à cette adresse;
+//Poster l'email entrée à cette adresse pour la souscripton à la Nesletter
 Route::post('/news_letter', 'subscribe_news@subscribe');
+
+
+
+/*
+ *Urls d'administration
+ *
+ *
+*/
+//Ajout d'un article
+    /*
+        Données à poster:
+        'nom'=>string
+        'marque'=>sring
+        'description'=>string
+        'prix_unitaire'=>double
+        'tailles'=>json en respectant la hiérarchie taille->couleur->quantité
+        'img'=>file
+        'categories'-> tableau de strings contenant toutes les catégories
+
+    */
+Route::post('admin/ajouter_article',['App\Http\Controllers\adminController','ajouter_article']);
+
+//Route::post('admin/{id}',['App\Http\Controllers\adminController','ajouter_article']);
+
+Route::get('admin/retirer_article/{id_article}',['App\Http\Controllers\adminController','retirer_article']);
+
+//lister les articles
+Route::get('admin/lister_articles',['App\Http\Controllers\adminController','lister_articles']);
+
+//Lister les commandes
+Route::get('admin/lister_commandes',['App\Http\Controllers\adminController','lister_commandes']);
+
+//Tri des commande par état
+
+Route::get('admin/trier_commandes/{etat}',['App\Http\Controllers\adminController','tri_par_etat']);
+
+//Changement de l'état d'une commande
+
+Route::get('admin/changer_etat_commade/{id_commande}/{etat}',['App\Http\Controllers\adminController','changer_etat']);
+
+
+
+

@@ -5,7 +5,8 @@ class Produits extends Component {
     constructor(props) {
         super(props)
         this.state={
-            products:[],selected:0,loaded:false
+            products:[],selected:0,loaded:false,filter:false,cat:"",price:"",tailles:"",
+            categories:['homme','femme','adulte','enfant','chemise','pantalon','veste','monteau']
         }
     }
     splitInPages(arr,n){
@@ -40,12 +41,104 @@ class Produits extends Component {
         console.log(this.state.products)
         this.props.trans(this.state.products[this.state.selected][i])
     }
+    HandleFilter=(type,value)=>{
+        if(type==="cat"){
+            var cats=document.querySelectorAll(".catFilter")
+            var str=""
+            for(let i=0; i<cats.length;i++){
+                let ch=cats[i].checked?this.state.categories[i]+"-":""
+                str=str+ch
+            }
+            if(str){
+                str=str.split('-')
+                str.splice(-1,1)
+                str=str.join("-")
+                console.log(str)
+            }
+            this.setState({cat:str,filter:true})
+            this.fetchFilter()
+        }
+    }
+    fetchFilter=()=>{
+        fetch("/products/"+this.state.cat+"/0-2000/0-50")
+            .then(body=>body.json())
+            .then(obj=>{
+                this.setState({products:this.splitInPages(obj,12),loaded:true})}
+                )
+    }
   render() {
     return (
         <div className="product-view">
         <div className="container-fluid">
             <div className="row">
                 <div className="col-lg-8">
+                <a className="btn btn-primary m-1" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Filtres
+                </a>
+                <div className="collapse" id="collapseExample">
+                    <div className="card card-body m-1">
+                        <div className="row">
+                            <div className="col-lg-6">
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","1")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck1"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck1">
+                                        Homme
+                                    </label>
+                                </div>
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","2")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck2"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck2">
+                                        Femme
+                                    </label>
+                                </div>
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","3")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck3"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck3">
+                                        Adulte
+                                    </label>
+                                </div>
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","4")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck4"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck4">
+                                        Enfant
+                                    </label>
+                                </div>
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","5")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck5"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck5">
+                                        Chemise
+                                    </label>
+                                </div>
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","6")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck6"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck6">
+                                        Pantalon
+                                    </label>
+                                </div>
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","7")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck7"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck7">
+                                        Veste
+                                    </label>
+                                </div>
+                                <div className="form-check-inline">
+                                    <input onChange={()=>{this.HandleFilter("cat","8")}} className="form-check-input catFilter" type="checkbox" value="" id="defaultCheck8"/>
+                                    <label className="form-check-label" htmlFor="defaultCheck8">
+                                        Menteau
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="col-lg-3">
+                                <p>Prix</p>
+                                <input type="number"/><span>  -   </span><input type="number"/>
+                            </div>
+                            <div className="col-lg-3">
+                                <p>Tailles</p>
+                                <input type="number"/><span>  -   </span><input type="number"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     <div className="row">
                         {
                             this.state.loaded?this.state.products[this.state.selected].map((elt,i)=>{

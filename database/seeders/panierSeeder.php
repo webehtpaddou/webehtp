@@ -14,18 +14,6 @@ class panierSeeder extends Seeder
      */
     public function run()
     {
-        for($i=1;$i<10;$i++){
-            DB::table('panier')->insert(
-                [
-                    'article'=>$i,
-                    'couleur'=>'M',
-                    'taille'=>'M',
-                    'pu'=>'200',
-                    'quantite'=>1,
-                    'user'=>1
-                ]
 
-            );
-        }
     }
 }

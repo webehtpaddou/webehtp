@@ -1,0 +1,42 @@
+.profile{
+    padding-top: 60px;
+    display: flex;
+    justify-content: center;
+}
+.profile .profile-card{
+    width: 90%;
+    margin-top: 20px;
+    background-color: white;
+    display: grid;
+    grid-template-columns: 40% auto;
+}
+.profile .info{
+    margin: 20px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid black;
+}
+.profile .info-text{
+    display: block;
+}
+.profile .info .img{
+    width: 40%;
+}
+.profile .info img{
+    width: 100%;
+}
+.profile .info .name{
+    margin: 10px;
+}
+.profile .info .email, .profile .info .address{
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+.edit img{
+    width: 15px !important;
+    cursor: pointer;
+    margin-left: 10px;
+}
