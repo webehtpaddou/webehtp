@@ -115,8 +115,19 @@ class productsController extends Controller
 
     //Recherche
     public function search($key){
-
-
+        $products=DB::table('articles')
+            ->where('nom','like','%'.$key.'%')
+            ->orWhere('marque','like','%'.$key.'%')
+            ->orWhere('description','like','%'.$key.'%')
+            ->get();
+        foreach($products as $item){
+            $sa_taille= DB::table('tailles')
+                        ->where('id','=',$item->tailles)
+                        ->first();
+            //echo json_encode(json_decode($sa_taille->data,true));
+            $item->tailles=json_encode(json_decode($sa_taille->data,true));
+        }
+        return $products;
     }
 
 }

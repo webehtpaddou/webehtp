@@ -14,7 +14,7 @@ class UpdateCommandesTable extends Migration
     public function up()
     {
         Schema::table('commandes', function (Blueprint $table) {
-            $table->json('data');
+            $table->jsonb('data');
             $table->unsignedBigInteger('client_id');
             $table->double('prix_total');
             $table->string('adresse');

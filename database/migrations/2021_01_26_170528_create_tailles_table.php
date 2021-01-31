@@ -15,7 +15,7 @@ class CreateTaillesTable extends Migration
     {
         Schema::create('tailles', function (Blueprint $table) {
             $table->id();
-            $table->json('data');
+            $table->jsonb('data');
             $table->timestamps();
         });
     }

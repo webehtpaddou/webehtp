@@ -108,6 +108,9 @@ Route::get('admin/trier_commandes/{etat}',['App\Http\Controllers\adminController
 
 Route::get('admin/changer_etat_commade/{id_commande}/{etat}',['App\Http\Controllers\adminController','changer_etat']);
 
+//Recherche
+
+Route::get('search/{key}',['App\Http\Controllers\products\productsController','search']);
 
 
 
