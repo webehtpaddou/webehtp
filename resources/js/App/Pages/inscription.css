@@ -60,3 +60,6 @@
 .inscription .already a{
     color: #96EAEA;
 }
+.inscription .errors{
+    color: red;
+}

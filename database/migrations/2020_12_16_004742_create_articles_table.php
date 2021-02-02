@@ -16,8 +16,6 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->unsignedBigInteger('categorie'); //References Categories.id
-            $table->foreign('categorie')->references('id')->on('categories');
             $table->string('marque');
             $table->string('description');
             $table->double('prix_unitaire');

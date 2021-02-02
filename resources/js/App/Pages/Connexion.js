@@ -4,23 +4,41 @@ import './connexion.css'
 class Connexion extends Component {
   constructor(props){
     super(props)
-    this.state={email:"",password:"",check:false}
+    this.state={email:"",password:"",check:false,message:""}
+  }
+  componentDidMount(){
+    fetch("/csrf/webehtpcsrfprovider").then(response=>response.text()).then(code=>{this.setState({token:code})})
   }
   handleEmailInput=(e)=>{
     this.setState({email: e.target.value})
+    this.setState({message:""})
   }
   handlePasswordInput=(e)=>{
     this.setState({password: e.target.value})
+    this.setState({message:""})
   }
   handleCheckInput=(e)=>{
     this.setState({check: !this.state.check})
   }
   handleSubmit=(e)=>{
     e.preventDefault()
-    console.log("email: "+this.state.email+"\npassword :"+this.state.password+"\nstayed :"+this.state.check)
-  }
-  componentDidMount(){
-    var csrf_token=fetch("/token").then(msg=>{console.log(msg.json())})
+    this.setState({message:""})
+    let formData1 = new FormData()
+    formData1.append('_token', this.state.token)
+    formData1.append('email', this.state.email)
+    formData1.append('password', this.state.password)
+    let formData2 = new FormData()
+    formData2.append('Accept', "application/json")
+    fetch("/login",
+    {
+      headers:formData2,
+      body: formData1,
+      method: "post"
+    }).then(body=>body.status).then(status=>{
+      if(status===204) location.href="/"
+      else if(status==422) this.setState({message:"Email et/ou mot de passe sont incorrects, veuillez ressayer."})
+      else this.setState({message:"Un erreur est servenu, veuillez ressayer."})
+    })
   }
   render() {
     return (
@@ -37,6 +55,7 @@ class Connexion extends Component {
                   <label htmlFor='remember'>Rester connecté</label>
                 </div>
             </div>
+            <p className="message">{this.state.message}</p>
             <button type='submit'>Se connecter</button>
             <a href="/forget" className="forget">Mot de pase oublié?</a>
         </form>
