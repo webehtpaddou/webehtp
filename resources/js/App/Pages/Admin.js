@@ -7,6 +7,7 @@ class Admin extends Component {
         this.state={
             open:false,
             window:"",
+            selected:0,
             commandes:[],
             produits:[],
             categories:['homme','femme','adulte','enfant','chemise','pantalon','veste','menteau'],
@@ -49,15 +50,14 @@ class Admin extends Component {
         formData1.append('categories',JSON.stringify(this.state.cat) )
         let formData2 = new FormData()
         formData2.append('Accept', "application/json")
+        formData2.append('enctype', "application/json")
         fetch("admin/ajouter_article",
         {
             headers:formData2,
           body: formData1,
           method: "post"
-        }).then(obj=>obj.json()
-            //this.setState({message:"Article ajouté"})
-        )
-        .then(data=>{console.log(data)})
+        })
+        .then(data=>{this.setState({message:"Article ajouté"})})
     }
     HandleFilter=(type,value)=>{
         if(type==="cat"){
@@ -68,6 +68,12 @@ class Admin extends Component {
             }
             this.setState({cat:str})
         }
+    }
+    changerEtatCommande=()=>{
+        
+        fetch("/admin/changer_etat_commade/"+this.state.commandes[this.state.index].id+"/"+document.querySelector("#etatcommande").value)
+        .then(obj=>obj.text())
+        .then(data=>{this.setState({message:"L'état de la commande a été changée avec succés"})})
     }
   render() {
     return (
@@ -177,14 +183,18 @@ class Admin extends Component {
                             case "commandes": 
                                 return <div className="commandes">
                                             <h1>Etat de livraison</h1>
-                                            <select defaultValue={'3'} className="custom-select">
-                                                <option value="1">Echec</option>
-                                                <option value="2">Livré</option>
-                                                <option value="3">En attente</option>
+                                            <select id="etatcommande" defaultValue={'3'} className="custom-select">
+                                                <option value="Echec">Echec</option>
+                                                <option value="Livré">Livré</option>
+                                                <option value="En attente">En attente</option>
                                             </select>
+                                            <a onClick={this.changerEtatCommande} className="btn btn-primary m-1" role="button">
+                                                Enregistrer
+                                            </a>
                                             <a className="btn btn-primary m-1" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                                                 Afficher articles
                                             </a>
+                                            {this.state.message!=""?<p className="text-success">{this.state.message}</p>:""}
                                             <div className="collapse" id="collapseExample">
                                             <div className="table-responsive">
                                                 <table className="table table-bordered">

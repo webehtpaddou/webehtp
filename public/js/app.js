@@ -71849,15 +71849,15 @@ var Admin = /*#__PURE__*/function (_Component) {
       formData1.append('categories', JSON.stringify(_this.state.cat));
       var formData2 = new FormData();
       formData2.append('Accept', "application/json");
+      formData2.append('enctype', "application/json");
       fetch("admin/ajouter_article", {
         headers: formData2,
         body: formData1,
         method: "post"
-      }).then(function (obj) {
-        return obj.json();
-      } //this.setState({message:"Article ajouté"})
-      ).then(function (data) {
-        console.log(data);
+      }).then(function (data) {
+        _this.setState({
+          message: "Article ajouté"
+        });
       });
     });
 
@@ -71876,9 +71876,20 @@ var Admin = /*#__PURE__*/function (_Component) {
       }
     });
 
+    _defineProperty(_assertThisInitialized(_this), "changerEtatCommande", function () {
+      fetch("/admin/changer_etat_commade/" + _this.state.commandes[_this.state.index].id + "/" + document.querySelector("#etatcommande").value).then(function (obj) {
+        return obj.text();
+      }).then(function (data) {
+        _this.setState({
+          message: "L'état de la commande a été changée avec succés"
+        });
+      });
+    });
+
     _this.state = {
       open: false,
       window: "",
+      selected: 0,
       commandes: [],
       produits: [],
       categories: ['homme', 'femme', 'adulte', 'enfant', 'chemise', 'pantalon', 'veste', 'menteau'],
@@ -72018,22 +72029,29 @@ var Admin = /*#__PURE__*/function (_Component) {
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
               className: "commandes"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h1", null, "Etat de livraison"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("select", {
+              id: "etatcommande",
               defaultValue: '3',
               className: "custom-select"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-              value: "1"
+              value: "Echec"
             }, "Echec"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-              value: "2"
+              value: "Livr\xE9"
             }, "Livr\xE9"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-              value: "3"
+              value: "En attente"
             }, "En attente")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+              onClick: _this3.changerEtatCommande,
+              className: "btn btn-primary m-1",
+              role: "button"
+            }, "Enregistrer"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
               className: "btn btn-primary m-1",
               "data-toggle": "collapse",
               href: "#collapseExample",
               role: "button",
               "aria-expanded": "false",
               "aria-controls": "collapseExample"
-            }, "Afficher articles"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+            }, "Afficher articles"), _this3.state.message != "" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", {
+              className: "text-success"
+            }, _this3.state.message) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
               className: "collapse",
               id: "collapseExample"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {

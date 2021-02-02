@@ -77,7 +77,7 @@ class adminController extends Controller
                 DB::table('article_categorie')->insert(
                     [
                         'article'=>$id,
-                        'categorie'=>DB::table('categories')->insertGetId($categories[$j])
+                        'categorie'=>DB::table('categories')->insertGetId(['categorie'=>$categories[$j]])
                     ]
                 );
             }
