@@ -25,7 +25,7 @@ class Navbar extends Component {
     .then(code=>{this.setState({token:code})})
   }
   fetchUser(){
-    fetch("users/identity")
+    fetch("/users/identity")
     .then(response=>response.json())
     .then(data=>{this.setState({user_name:data.name})})
   }
@@ -34,6 +34,12 @@ class Navbar extends Component {
     let formData = new FormData()
     formData.append('_token', this.state.token)
     fetch("/logout",{body:formData,method:"post"}).then(()=>{location.reload()})
+  }
+  searchFetch=()=>{
+    var str=document.querySelector(".searchbtn").value
+    fetch("/search/"+str)
+    .then(response=>response.json())
+    .then(data=>{this.props.pdisp(data)})
   }
   render(){
     
@@ -89,8 +95,8 @@ class Navbar extends Component {
                     </div>
                     <div className="col-md-6">
                         <div className="search">
-                            <input type="text" placeholder="Search"/>
-                            <button><i className="fa fa-search"></i></button>
+                            <input className="searchbtn" type="text" placeholder="Search"/>
+                            <Link to="/produits"><button onClick={()=>{this.searchFetch()}}><i className="fa fa-search"></i></button></Link>
                         </div>
                     </div>
                     

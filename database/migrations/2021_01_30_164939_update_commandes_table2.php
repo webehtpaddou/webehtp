@@ -14,7 +14,7 @@ class UpdateCommandesTable2 extends Migration
     public function up()
     {
         Schema::table('commandes', function (Blueprint $table) {
-            $table->string("etat")->default("en_traitement");
+            $table->string("etat")->default("en traitement");
         });
     }
 

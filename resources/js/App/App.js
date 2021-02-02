@@ -13,10 +13,9 @@ import DetailsProduit from './Pages/DetailsProduit'
 class App extends Component {
   constructor(props){
     super(props)
-    this.state={product:{},item:{}}
+    this.state={product:{},item:{},products:[],search:false}
   }
   f=(p)=>{
-    console.log(p)
     this.setState({product:p})
   }
   g=()=>this.state.product
@@ -30,17 +29,21 @@ class App extends Component {
     this.setState({item:temp})
   }
   g2=()=>this.state.item
+  s1=(data)=>{
+    this.setState({products:data,search:true})
+  }
+  s2=()=> this.state.products
   render(){
   return (
       <Router>
         <div>
-          <Navbar trans1={this.g1}/>
+          <Navbar pdisp={this.s1} trans1={this.g1}/>
           <Switch>
             <Route path='/' exact component={Accueil} />
             <Route path='/authentification' component={Authentification} />
             <Route path='/profile' component={Profile} />
             <Route path='/admin' component={Admin} />
-            <Route exact path='/produits' component={()=><Produits trans={this.f}/>} />
+            <Route exact path='/produits' component={()=><Produits sf={this.state.search} pdisp={this.s2} trans={this.f}/>} />
             <Route path='/details' component={()=><DetailsProduit trans1={this.f1} trans={this.g}/>} />
             <Route path="/panier" component={Panier}/>
             <Route path="/paiement" component={Paiement}/>

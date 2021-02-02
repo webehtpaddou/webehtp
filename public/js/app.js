@@ -71244,8 +71244,6 @@ var App = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "f", function (p) {
-      console.log(p);
-
       _this.setState({
         product: p
       });
@@ -71289,9 +71287,22 @@ var App = /*#__PURE__*/function (_Component) {
       return _this.state.item;
     });
 
+    _defineProperty(_assertThisInitialized(_this), "s1", function (data) {
+      _this.setState({
+        products: data,
+        search: true
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "s2", function () {
+      return _this.state.products;
+    });
+
     _this.state = {
       product: {},
-      item: {}
+      item: {},
+      products: [],
+      search: false
     };
     return _this;
   }
@@ -71302,6 +71313,7 @@ var App = /*#__PURE__*/function (_Component) {
       var _this2 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["BrowserRouter"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Navbar_Navbar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        pdisp: this.s1,
         trans1: this.g1
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
         path: "/",
@@ -71321,6 +71333,8 @@ var App = /*#__PURE__*/function (_Component) {
         path: "/produits",
         component: function component() {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pages_Produits__WEBPACK_IMPORTED_MODULE_8__["default"], {
+            sf: _this2.state.search,
+            pdisp: _this2.s2,
             trans: _this2.f
           });
         }
@@ -71778,10 +71792,11 @@ var Admin = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
 
-    _defineProperty(_assertThisInitialized(_this), "openTab", function (str) {
+    _defineProperty(_assertThisInitialized(_this), "openTab", function (str, i) {
       _this.setState({
         open: true,
-        window: str
+        window: str,
+        index: i
       });
     });
 
@@ -71791,17 +71806,106 @@ var Admin = /*#__PURE__*/function (_Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "fetchCommandes", function () {
+      fetch("/admin/lister_commandes").then(function (obj) {
+        return obj.json();
+      }).then(function (obj) {
+        _this.setState({
+          commandes: obj
+        });
+
+        console.log(obj);
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "fetchProduits", function () {
+      fetch("/admin/lister_articles").then(function (obj) {
+        return obj.json();
+      }).then(function (obj) {
+        _this.setState({
+          produits: obj
+        });
+
+        console.log(obj);
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "addProduct", function () {
+      var formData1 = new FormData();
+      formData1.append('_token', _this.state.token);
+      formData1.append('nom', document.querySelector("#ajnom").value);
+      formData1.append('marque', document.querySelector("#ajmarque").value);
+      formData1.append('description', document.querySelector("#ajdescription").value);
+      formData1.append('prix_unitaire', document.querySelector("#ajprix_unitaire").value);
+      formData1.append('img', document.querySelector("#ajimg").value);
+
+      var ch = _defineProperty({}, document.querySelector("#ajtaille").children[0].children[0].value.toString(), _defineProperty({}, document.querySelector("#ajtaille").children[1].children[0].value.toString(), parseInt(document.querySelector("#ajtaille").children[2].children[0].value)));
+
+      console.log(JSON.stringify(ch));
+      formData1.append('tailles', JSON.stringify(ch));
+
+      _this.HandleFilter();
+
+      formData1.append('categories', JSON.stringify(_this.state.cat));
+      var formData2 = new FormData();
+      formData2.append('Accept', "application/json");
+      fetch("admin/ajouter_article", {
+        headers: formData2,
+        body: formData1,
+        method: "post"
+      }).then(function (obj) {
+        return obj.json();
+      } //this.setState({message:"Article ajouté"})
+      ).then(function (data) {
+        console.log(data);
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "HandleFilter", function (type, value) {
+      if (type === "cat") {
+        var cats = document.querySelectorAll(".catFilter");
+        var str = [];
+
+        for (var i = 0; i < cats.length; i++) {
+          cats[i].checked ? str.push(_this.state.categories[i]) : "";
+        }
+
+        _this.setState({
+          cat: str
+        });
+      }
+    });
+
     _this.state = {
       open: false,
-      window: ""
+      window: "",
+      commandes: [],
+      produits: [],
+      categories: ['homme', 'femme', 'adulte', 'enfant', 'chemise', 'pantalon', 'veste', 'menteau'],
+      message: ""
     };
     return _this;
   }
 
   _createClass(Admin, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.fetchCommandes();
+      this.fetchProduits();
+      fetch("/csrf/webehtpcsrfprovider").then(function (response) {
+        return response.text();
+      }).then(function (code) {
+        _this2.setState({
+          token: code
+        });
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "my-account"
@@ -71842,25 +71946,31 @@ var Admin = /*#__PURE__*/function (_Component) {
         id: "orders-tab",
         role: "tabpanel",
         "aria-labelledby": "orders-nav"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-        className: "btn"
-      }, "Ajouter"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "table-responsive"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
         className: "table table-bordered"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", {
         className: "thead-dark"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Id"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nom"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Total"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Statut"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "1"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "Product Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "01 Jan 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "$99"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "Approved"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-        onClick: function onClick() {
-          _this2.openTab("commandes");
-        },
-        className: "btn"
-      }, "View"))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Id"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nom"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Total"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Statut"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, this.state.commandes.map(function (item, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
+          key: i
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.client_id[0].nom + " " + item.client_id[0].prenom), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "01 Jan 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.prix_total + "DH"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.etat), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+          onClick: function onClick(e) {
+            _this3.openTab("commandes", e.target.getAttribute("data-index"));
+          },
+          "data-index": i,
+          className: "btn"
+        }, "View")));
+      }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "tab-pane fade",
         id: "products-tab",
         role: "tabpanel",
         "aria-labelledby": "products-nav"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+        onClick: function onClick() {
+          _this3.openTab("creerproduits");
+        },
         className: "btn"
       }, "Ajouter"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "table-responsive"
@@ -71868,12 +71978,16 @@ var Admin = /*#__PURE__*/function (_Component) {
         className: "table table-bordered"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", {
         className: "thead-dark"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Id"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Produit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Date d'ajout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Prix"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "1"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "Product Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "01 Jan 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "$99"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-        onClick: function onClick() {
-          _this2.openTab("produits");
-        },
-        className: "btn"
-      }, "Modifier"))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Id"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Produit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Date d'ajout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Prix"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, this.state.produits.map(function (item, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
+          key: i
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.nom), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "01 Jan 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.prix_unitaire + "DH"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+          onClick: function onClick() {
+            _this3.openTab("produits");
+          },
+          className: "btn"
+        }, "Modifier")));
+      }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "tab-pane fade",
         id: "users-tab",
         role: "tabpanel",
@@ -71888,7 +72002,7 @@ var Admin = /*#__PURE__*/function (_Component) {
         className: "thead-dark"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Id"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nom"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Date de cr\xE9ation"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "R\xF4le"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "1"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "Product Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "01 Jan 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "$99"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         onClick: function onClick() {
-          _this2.openTab("utilisateurs");
+          _this3.openTab("utilisateurs");
         },
         className: "btn"
       }, "Modifier"))))))))))), this.state.open ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -71899,7 +72013,7 @@ var Admin = /*#__PURE__*/function (_Component) {
         onClick: this.closeTab,
         className: "fas fa-times"
       }), function () {
-        switch (_this2.state.window) {
+        switch (_this3.state.window) {
           case "commandes":
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
               className: "commandes"
@@ -71912,41 +72026,216 @@ var Admin = /*#__PURE__*/function (_Component) {
               value: "2"
             }, "Livr\xE9"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
               value: "3"
-            }, "En attente")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-              className: "btn"
-            }, "Supprimer"));
+            }, "En attente")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+              className: "btn btn-primary m-1",
+              "data-toggle": "collapse",
+              href: "#collapseExample",
+              role: "button",
+              "aria-expanded": "false",
+              "aria-controls": "collapseExample"
+            }, "Afficher articles"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "collapse",
+              id: "collapseExample"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "table-responsive"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
+              className: "table table-bordered"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", {
+              className: "thead-dark"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "id"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "image"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nom"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Taille"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "couleur"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, JSON.parse(_this3.state.commandes[_this3.state.index].data).map(function (item, i) {
+              return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
+                key: i
+              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("img", {
+                className: "minimg",
+                src: item.article[0].img
+              })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.article[0].nom), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.taille), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, item.couleur));
+            }))))));
 
           case "produits":
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
               className: "commandes"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Nom"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
-              onChange: _this2.handleNom,
+              id: "modifnom",
               className: "form-control",
               type: "text"
             }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Prix unitaire"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
-              onChange: _this2.handlePrix,
+              onChange: _this3.handlePrix,
               className: "form-control",
               type: "text"
             }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Image"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
-              onChange: _this2.handleFile,
+              onChange: _this3.handleFile,
               type: "file",
               className: "form-control"
             }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
               className: "table table-bordered"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", {
               className: "thead-dark"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Taille"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nombre restant"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "43"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "21")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
-              className: "table table-bordered"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", {
-              className: "thead-dark"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Couleur"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nombre restant"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "43"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, "21")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Taille"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Couleur"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nombre restant"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              type: "number"
+            })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              type: "text"
+            })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              type: "number"
+            }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
               onClick: function onClick() {
-                _this2.update("Produits");
+                _this3.update("Produits");
               },
               className: "btn"
             }, "Modifier"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
               className: "btn"
             }, "Supprimer"));
+
+          case "creerproduits":
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "commandes"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Nom"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              id: "ajnom",
+              className: "form-control",
+              type: "text"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Marque"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              id: "ajmarque",
+              className: "form-control",
+              type: "text"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Description"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              id: "ajdescription",
+              className: "form-control",
+              type: "text"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Prix unitaire"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              id: "ajprix_unitaire",
+              className: "form-control",
+              type: "text"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Image"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              id: "ajimg",
+              type: "file",
+              className: "form-control"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
+              className: "table table-bordered"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", {
+              className: "thead-dark"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Taille"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Couleur"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Nombre restant"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
+              id: "ajtaille"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              type: "text"
+            })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              type: "text"
+            })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              type: "number"
+            }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Cat\xE9gories"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "row"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "col-lg-12"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "1");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck1"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck1"
+            }, "Homme")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "2");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck2"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck2"
+            }, "Femme")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "3");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck3"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck3"
+            }, "Adulte")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "4");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck4"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck4"
+            }, "Enfant")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "5");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck5"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck5"
+            }, "Chemise")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "6");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck6"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck6"
+            }, "Pantalon")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "7");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck7"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck7"
+            }, "Veste")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              className: "form-check-inline"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              onChange: function onChange() {
+                _this3.HandleFilter("cat", "8");
+              },
+              className: "form-check-input catFilter",
+              type: "checkbox",
+              value: "",
+              id: "defaultCheck8"
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+              className: "form-check-label",
+              htmlFor: "defaultCheck8"
+            }, "Menteau")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+              onClick: function onClick() {
+                _this3.addProduct();
+              },
+              className: "btn m-4"
+            }, "Ajouter Produit"), _this3.state.message != "" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", {
+              className: "text-success"
+            }, _this3.state.message) : "");
 
           case "utilisateurs":
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -73171,6 +73460,28 @@ var Produits = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
 
+    _defineProperty(_assertThisInitialized(_this), "componentDidMount", function () {
+      if (_this.state.search) {
+        var p = _this.props.pdisp();
+
+        console.log(p);
+
+        _this.setState({
+          products: _this.splitInPages(p, 12),
+          loaded: true
+        });
+      } else {
+        fetch("/products").then(function (body) {
+          return body.json();
+        }).then(function (obj) {
+          _this.setState({
+            products: _this.splitInPages(obj, 12),
+            loaded: true
+          });
+        });
+      }
+    });
+
     _defineProperty(_assertThisInitialized(_this), "changePage", function (e) {
       var c = e.target.innerHTML;
 
@@ -73209,27 +73520,50 @@ var Produits = /*#__PURE__*/function (_Component) {
           str = str.split('-');
           str.splice(-1, 1);
           str = str.join("-");
-          console.log(str);
         }
 
         _this.setState({
-          cat: str,
-          filter: true
+          filter: true,
+          cat: str
         });
+
+        setTimeout(function () {
+          _this.fetchFilter();
+        }, 300);
+      } else if (type === "taille" || type === "prix") {
+        console.log(document.querySelector("#" + value).value);
+
+        _this.setState(_defineProperty({}, value, document.querySelector("#" + value).value));
 
         _this.fetchFilter();
       }
     });
 
     _defineProperty(_assertThisInitialized(_this), "fetchFilter", function () {
-      fetch("/products/" + _this.state.cat + "/0-2000/0-50").then(function (body) {
-        return body.json();
-      }).then(function (obj) {
-        _this.setState({
-          products: _this.splitInPages(obj, 12),
-          loaded: true
+      var minp = _this.state.minprix >= 0 ? _this.state.minprix : 0;
+      var maxp = _this.state.maxprix <= 5000 ? _this.state.maxprix : 5000;
+      console.log(_this.state.cat);
+
+      if (_this.state.cat) {
+        console.log("54515");
+        fetch("/products/" + _this.state.cat + "/" + minp + "-" + maxp + "/0-50/").then(function (body) {
+          return body.json();
+        }).then(function (obj) {
+          _this.setState({
+            products: _this.splitInPages(obj, 12),
+            loaded: true
+          });
         });
-      });
+      } else {
+        fetch("/products/homme-femme-adulte-enfant-chemise-pantalon-veste-menteau/" + minp + "-" + maxp + "/0-50/").then(function (body) {
+          return body.json();
+        }).then(function (obj) {
+          _this.setState({
+            products: _this.splitInPages(obj, 12),
+            loaded: true
+          });
+        });
+      }
     });
 
     _this.state = {
@@ -73240,7 +73574,8 @@ var Produits = /*#__PURE__*/function (_Component) {
       cat: "",
       price: "",
       tailles: "",
-      categories: ['homme', 'femme', 'adulte', 'enfant', 'chemise', 'pantalon', 'veste', 'monteau']
+      categories: ['homme', 'femme', 'adulte', 'enfant', 'chemise', 'pantalon', 'veste', 'menteau'],
+      search: props.sf
     };
     return _this;
   }
@@ -73257,23 +73592,9 @@ var Produits = /*#__PURE__*/function (_Component) {
       return res;
     }
   }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      fetch("/products").then(function (body) {
-        return body.json();
-      }).then(function (obj) {
-        _this2.setState({
-          products: _this2.splitInPages(obj, 12),
-          loaded: true
-        });
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "product-view"
@@ -73303,7 +73624,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "1");
+          _this2.HandleFilter("cat", "1");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73316,7 +73637,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "2");
+          _this2.HandleFilter("cat", "2");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73329,7 +73650,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "3");
+          _this2.HandleFilter("cat", "3");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73342,7 +73663,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "4");
+          _this2.HandleFilter("cat", "4");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73355,7 +73676,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "5");
+          _this2.HandleFilter("cat", "5");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73368,7 +73689,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "6");
+          _this2.HandleFilter("cat", "6");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73381,7 +73702,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "7");
+          _this2.HandleFilter("cat", "7");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73394,7 +73715,7 @@ var Produits = /*#__PURE__*/function (_Component) {
         className: "form-check-inline"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange() {
-          _this3.HandleFilter("cat", "8");
+          _this2.HandleFilter("cat", "8");
         },
         className: "form-check-input catFilter",
         type: "checkbox",
@@ -73406,18 +73727,42 @@ var Produits = /*#__PURE__*/function (_Component) {
       }, "Menteau"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-lg-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Prix"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        min: "0",
+        max: "5000",
+        id: "minprix",
+        onChange: function onChange() {
+          _this2.HandleFilter("prix", "minprix");
+        },
         type: "number"
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "  -   "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: function onChange() {
+          _this2.HandleFilter("prix", "maxprix");
+        },
+        id: "maxprix",
+        min: "0",
+        max: "5000",
         type: "number"
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-lg-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Tailles"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: function onChange() {
+          _this2.HandleFilter("taille", "mintaille");
+        },
+        id: "mintaille",
+        min: "0",
+        max: "50",
         type: "number"
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "  -   "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: function onChange() {
+          _this2.HandleFilter("taille", "maxtaille");
+        },
+        id: "maxtaille",
+        min: "0",
+        max: "50",
         type: "number"
       }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
-      }, this.state.loaded ? this.state.products[this.state.selected].map(function (elt, i) {
+      }, this.state.loaded && this.state.products.length > 0 ? this.state.products[this.state.selected].map(function (elt, i) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: i,
           className: "col-md-4"
@@ -73436,12 +73781,12 @@ var Produits = /*#__PURE__*/function (_Component) {
           className: "product-price"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, elt.prix_unitaire, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "DH")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
           "data-index": i,
-          onClick: _this3.handleTrans,
+          onClick: _this2.handleTrans,
           to: "/details",
           className: "btn",
           href: ""
         }, "Details"))));
-      }) : "loading..."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }) : this.state.products.length === 0 ? "Rien à afficher" : "loading..."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-12"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
         "aria-label": "Page navigation example"
@@ -73457,9 +73802,9 @@ var Produits = /*#__PURE__*/function (_Component) {
       }, "Pr\xE9c\xE9dent")), this.state.products.map(function (e, i) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: i,
-          className: _this3.state.selected === i ? "page-item active" : "page-item"
+          className: _this2.state.selected === i ? "page-item active" : "page-item"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          onClick: _this3.changePage,
+          onClick: _this2.changePage,
           className: "page-link",
           href: "#"
         }, i + 1));
@@ -73908,6 +74253,15 @@ var Navbar = /*#__PURE__*/function (_Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "searchFetch", function () {
+      var str = document.querySelector(".searchbtn").value;
+      fetch("/search/" + str).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        _this.props.pdisp(data);
+      });
+    });
+
     _this.state = {
       user_authenticated: false,
       user_name: "",
@@ -73921,7 +74275,7 @@ var Navbar = /*#__PURE__*/function (_Component) {
     value: function fetchUser() {
       var _this2 = this;
 
-      fetch("users/identity").then(function (response) {
+      fetch("/users/identity").then(function (response) {
         return response.json();
       }).then(function (data) {
         _this2.setState({
@@ -73932,6 +74286,8 @@ var Navbar = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "nav"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -74014,11 +74370,18 @@ var Navbar = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "search"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "searchbtn",
         type: "text",
         placeholder: "Search"
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/produits"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: function onClick() {
+          _this3.searchFetch();
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fa fa-search"
-      }))))))));
+      })))))))));
     }
   }]);
 

@@ -49,42 +49,41 @@ class productsController extends Controller
 
 
         //filtrage par catégories
-
-
-
-
-
-
-        //
-
-        $produits=DB::table('articles')
+        $bloc= [];
+        foreach($table_categories as $categorie){
+            $liste=DB::table('articles')
                     ->join('article_categorie','articles.id','=','article_categorie.article')
                     ->join('categories','categories.id','=','article_categorie.categorie')
-                    ->whereIn('categories.id',$table_categories)
+                    ->where('categories.id','=',$categorie)
                     ->distinct()
                     ->get('articles.id');
-        //filtrage par prix
-        $produits2=null;
-        if($prix!=null){
-            $produits2=DB::table('articles')
-                    ->whereBetween('prix_unitaire',$table_prix)
-                    ->get('id');
-                $produits=$produits2;
+            $indicesliste=[];
+            foreach($liste as $indice){
+                array_push($indicesliste,$indice->id);
+            }
+            array_push($bloc,$indicesliste);
+            $indicesliste=[];
         }
+        //return $bloc; //Tableau des indices
+        $temoin=$bloc[0];
+        for($i=1;$i<count($bloc);$i++){
+            $temoin=array_intersect($temoin,$bloc[$i]);
+        }
+        //return $temoin;
+
+        $produits=DB::table('articles')
+                    ->whereIn('id',$temoin)
+                    ->whereBetween('prix_unitaire',$table_prix)
+                    ->inRandomOrder()
+                    ->get();
+
 
         //filtrage par taille
         if($taille!=null){
             //
         }
 
-        $array = json_decode(json_encode($produits), true);
-        $retour= DB::table('articles')
-            ->whereIn('id',$array)
-            ->inRandomOrder()
-            ->get();
-
-
-        foreach($retour as $item){
+        foreach($produits as $item){
             $sa_taille= DB::table('tailles')
                         ->where('id','=',$item->tailles)
                         ->first();
@@ -93,8 +92,7 @@ class productsController extends Controller
         }
 
         //return  json_encode((array)$produits);
-        return $retour;
-
+        return $produits;
     }
 
     //Liste tous les articles

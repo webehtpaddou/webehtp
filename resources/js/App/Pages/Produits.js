@@ -6,7 +6,9 @@ class Produits extends Component {
         super(props)
         this.state={
             products:[],selected:0,loaded:false,filter:false,cat:"",price:"",tailles:"",
-            categories:['homme','femme','adulte','enfant','chemise','pantalon','veste','monteau']
+            categories:['homme','femme','adulte','enfant','chemise','pantalon','veste','menteau'],
+            search:props.sf
+
         }
     }
     splitInPages(arr,n){
@@ -16,12 +18,21 @@ class Produits extends Component {
         }
         return res
     }
-    componentDidMount(){
-        fetch("/products")
+    componentDidMount=()=>{
+        
+        if(this.state.search){
+            let p=this.props.pdisp()
+            console.log(p)
+            this.setState({products:this.splitInPages(p,12),loaded:true})
+        }
+        else{
+            fetch("/products")
         .then(body=>body.json())
         .then(obj=>{
             this.setState({products:this.splitInPages(obj,12),loaded:true})}
             )
+        }
+        
     }
     changePage=(e)=>{
         let c=e.target.innerHTML
@@ -53,18 +64,38 @@ class Produits extends Component {
                 str=str.split('-')
                 str.splice(-1,1)
                 str=str.join("-")
-                console.log(str)
             }
-            this.setState({cat:str,filter:true})
+            this.setState({filter:true,cat:str})
+            setTimeout(()=>{this.fetchFilter()},300)
+            
+        }
+        else if(type==="taille" || type==="prix"){
+            console.log(document.querySelector("#"+value).value)
+            this.setState({[value]:document.querySelector("#"+value).value})
             this.fetchFilter()
         }
     }
     fetchFilter=()=>{
-        fetch("/products/"+this.state.cat+"/0-2000/0-50")
+        let minp=this.state.minprix>=0?this.state.minprix:0
+        let maxp=this.state.maxprix<=5000?this.state.maxprix:5000
+        console.log(this.state.cat)
+        if(this.state.cat){
+            console.log("54515")
+        fetch("/products/"+this.state.cat+"/"+minp+"-"+maxp+"/0-50/")
+            .then(body=>body.json())
+            .then(obj=>{
+                this.setState({products:this.splitInPages(obj,12),loaded:true})
+            }
+                
+                )
+        }
+        else{
+            fetch("/products/homme-femme-adulte-enfant-chemise-pantalon-veste-menteau/"+minp+"-"+maxp+"/0-50/")
             .then(body=>body.json())
             .then(obj=>{
                 this.setState({products:this.splitInPages(obj,12),loaded:true})}
                 )
+        }
     }
   render() {
     return (
@@ -130,18 +161,18 @@ class Produits extends Component {
                             </div>
                             <div className="col-lg-3">
                                 <p>Prix</p>
-                                <input type="number"/><span>  -   </span><input type="number"/>
+                                <input min="0" max="5000" id="minprix" onChange={()=>{this.HandleFilter("prix","minprix")}} type="number"/><span>  -   </span><input onChange={()=>{this.HandleFilter("prix","maxprix")}} id="maxprix" min="0" max="5000" type="number"/>
                             </div>
                             <div className="col-lg-3">
                                 <p>Tailles</p>
-                                <input type="number"/><span>  -   </span><input type="number"/>
+                                <input onChange={()=>{this.HandleFilter("taille","mintaille")}} id="mintaille" min="0" max="50" type="number"/><span>  -   </span><input onChange={()=>{this.HandleFilter("taille","maxtaille")}} id="maxtaille" min="0" max="50" type="number"/>
                             </div>
                         </div>
                     </div>
                 </div>
                     <div className="row">
                         {
-                            this.state.loaded?this.state.products[this.state.selected].map((elt,i)=>{
+                            this.state.loaded&&this.state.products.length>0?this.state.products[this.state.selected].map((elt,i)=>{
                                 return(
                                 <div key={i} className="col-md-4">
                                     <div className="product-item">
@@ -157,7 +188,7 @@ class Produits extends Component {
                                         </div>
                                     </div>
                                 </div>
-                            )}):"loading..."
+                            )}):this.state.products.length===0?"Rien à afficher":"loading..."
                         }
                     </div>
                     <div className="col-md-12">

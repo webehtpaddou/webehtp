@@ -84,6 +84,7 @@ class panierController extends Controller
     }
     public function client_data(Request $request){
         if(Auth::check()){
+
             $client_id=DB::table('clients')->insertGetId(
                 [
                     'nom'=>$request->input('nom'),
@@ -93,7 +94,9 @@ class panierController extends Controller
                     'telephone'=>$request->input('tel'),
                     'email'=>$request->input('email'),
                     'id_user'=>$request->user()->id,
-                    'adresse'=>$request->input('adresse')
+                    'adresse'=>$request->input('adresse'),
+                    'created_at'=>date('l j F Y, H:i'),
+                    'updated_at'=>date('l j F Y, H:i'),
                 ]
                 );
             if($client_id!=0){
@@ -110,7 +113,9 @@ class panierController extends Controller
                         'client_id'=>$client_id,
                         'prix_total'=>$prix_total+$delivery_tax,
                         'prix_total_ht'=>$prix_total+$delivery_tax,
-                        'adresse'=>$request->input('adresse')
+                        'adresse'=>$request->input('adresse'),
+                        'created_at'=>date('l j F Y, H:i'),
+                        'updated_at'=>date('l j F Y, H:i'),
                     ]
                     );
                 if($id_commande!=0){

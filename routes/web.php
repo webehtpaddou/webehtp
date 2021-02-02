@@ -23,6 +23,8 @@ Route::view("/authentification","app");
 Route::view("/produits","app");
 Route::view("/details","app");
 Route::view("/panier","app");
+Route::view("/admin","app");
+Route::view("/profile","app");
 Route::view("/paiement","app");
 Auth::routes();
 
@@ -88,29 +90,54 @@ Route::post('/news_letter', 'subscribe_news@subscribe');
         'categories'-> tableau de strings contenant toutes les catégories
 
     */
-Route::post('admin/ajouter_article',['App\Http\Controllers\adminController','ajouter_article']);
+Route::post('admin/ajouter_article',[App\Http\Controllers\adminController::class,'ajouter_article']);
 
 //Route::post('admin/{id}',['App\Http\Controllers\adminController','ajouter_article']);
 
-Route::get('admin/retirer_article/{id_article}',['App\Http\Controllers\adminController','retirer_article']);
+Route::get('admin/retirer_article/{id_article}',[App\Http\Controllers\adminController::class,'retirer_article']);
 
 //lister les articles
-Route::get('admin/lister_articles',['App\Http\Controllers\adminController','lister_articles']);
+Route::get('admin/lister_articles',[App\Http\Controllers\adminController::class,'lister_articles']);
+
 
 //Lister les commandes
-Route::get('admin/lister_commandes',['App\Http\Controllers\adminController','lister_commandes']);
+Route::get('admin/lister_commandes',[App\Http\Controllers\adminController::class,'lister_commandes']);
 
 //Tri des commande par état
 
-Route::get('admin/trier_commandes/{etat}',['App\Http\Controllers\adminController','tri_par_etat']);
+Route::get('admin/trier_commandes/{etat}',[App\Http\Controllers\adminController::class,'tri_par_etat']);
 
 //Changement de l'état d'une commande
 
-Route::get('admin/changer_etat_commade/{id_commande}/{etat}',['App\Http\Controllers\adminController','changer_etat']);
+Route::get('admin/changer_etat_commade/{id_commande}/{etat}',[App\Http\Controllers\adminController::class,'changer_etat']);
 
 //Recherche
 
-Route::get('search/{key}',['App\Http\Controllers\products\productsController','search']);
+Route::get('search/{key}',[App\Http\Controllers\products\productsController::class,'search']);
+
+
+//Données utilisateur
+
+Route::get('user/commandes',[App\Http\Controllers\user\userController::class,'lister_commandes']);
+
+//Infos du client
+Route::get('user/client_infos',[App\Http\Controllers\user\userController::class,'client_infos']);
+
+
+//Create or change client_infos
+    /*poster les données avec les clés suivantes, que ce soit pour une modification des données ou pour le premier enregistrement
+    'nom'=>'nom',
+    'prenom'=>'prenom',
+    'pays'=>'pays',
+    'ville'=>'ville',
+    'telephone'=>'tel',
+    'email'=>'email',
+    'adresse'=>'adresse',
+
+
+    */
+Route::post('user/set_client_infos',[App\Http\Controllers\user\userController::class,'add_infos_client']);
+
 
 
 

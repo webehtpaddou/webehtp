@@ -58,7 +58,7 @@ class adminController extends Controller
             //Sauvegarde de l'image
             $img_url=$this->save_files($request);
 
-            if(!is_file($img_url)) return "error";
+            //if(!is_file($img_url)) return "error";
 
             $id=DB::table('articles')->insertGetId(
                 [
@@ -72,11 +72,12 @@ class adminController extends Controller
                 );
 
             //Ajouter des categories à l'élement
-            for($j=0;$j<count($request->post("categories"));$j++){
+            $categories=json_decode($request->post("categories"));
+            for($j=0;$j<count($categories);$j++){
                 DB::table('article_categorie')->insert(
                     [
                         'article'=>$id,
-                        'categorie'=>($request->post("categories"))[$j],
+                        'categorie'=>DB::table('categories')->insertGetId($categories[$j])
                     ]
                 );
             }
@@ -168,3 +169,4 @@ class adminController extends Controller
 
     }
 }
+

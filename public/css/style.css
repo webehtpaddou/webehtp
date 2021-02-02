@@ -1905,6 +1905,41 @@ h2 {
     border-color: #000000;
 }
 
+.product-view input[type="number"]{
+    width: 40%;
+}
+.update-window{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(85, 85, 85, 0.425);
+    position: fixed;
+    bottom: 0vh;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.update-tab{
+    position: relative;
+    height: 90%;
+    width: 800px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: scroll;
+}
+.update-tab .fa-times{
+    position: absolute;
+    right: 10px;
+    font-size: 35px;
+    cursor: pointer;
+
+}
+.admin .commandes{
+    padding: 40px 60px;
+}
+.minimg{
+    height:50px
+}
 @media (max-width: 767.98px) {
     .call-to-action,
     .call-to-action .col-md-6:last-child {
