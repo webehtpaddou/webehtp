@@ -6,6 +6,7 @@ bootstrap/compiled.php
 app/storage/
 public/storage
 public/hot
+public/localhost:8000
 public_html/storage
 public_html/hot
 storage/*.key
