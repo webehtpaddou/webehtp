@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import user from "./user.svg"
-import edit from "./edit.svg"
-
 class Profile extends Component {
   render() {
     return (
